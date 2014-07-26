@@ -155,12 +155,12 @@ function onMouseMoveEventHandler(e) {
 		break;
 	case "LineStyle":
 		if (lineMode.inLineMode()) {
-			mX = e.offsetX;
-			mY = e.offsetY;
-			g.beginPath();
-			g.moveTo(lineMode.getLineModeStartX(), lineMode.getLineModeStartY());
-			g.lineTo(mX, mY);
-			g.stroke();
+			g.clearRect();
+			temp = drawColor;
+			drawColor='red';
+			handleGraphicsObjAndEventObj(tempLayer, e);
+			drawLine(tempLayer, lineMode.getLineModeStartX(), lineMode.getLineModeStartY(), e.offsetX, e.offsetY);
+			drawColor= temp;
 		}
 		break;
 	case "SprayStyle":
@@ -188,12 +188,11 @@ function randomizeColorButtons() {
 
 // making a var outside of all function makes it global
 var g;
+var tempLayer;
 
-function onloadEventHandler() {
-	drawingOn = false;
-	
-	var can = document.getElementById('canvas123');
-	g = can.getContext('2d');
+function setupCanvasAndGetContext(canvasName){
+	var can = document.getElementById(canvasName);
+	var g = can.getContext('2d');
 	g.canvas.width = window.innerWidth - 15;
 	g.canvas.height = window.innerHeight * .9;
 	g.save();
@@ -201,6 +200,14 @@ function onloadEventHandler() {
 	can.addEventListener("mousemove", onMouseMoveEventHandler, false);
 	can.addEventListener("mouseup", onMouseUpEventHandler, false);
 	can.addEventListener("mousedown", onMouseDownEventHandler, false);
+	
+	return g;
+}
+function onloadEventHandler() {
+	drawingOn = false;
+	
+	g = setupCanvasAndGetContext('canvas123');
+	tempLayer = setupCanvasAndGetContext('canvasLayer2');
 
 	// change button text
 	document.querySelector('#but1').textContent = 'FreeStyle';

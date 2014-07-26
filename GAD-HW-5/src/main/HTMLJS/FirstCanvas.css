@@ -1,15 +1,7 @@
-﻿body
-{
-}
-
-button {
+﻿button {
     font-size: 30px;
     color: black;
     background-color: lightblue;
     height: 60px;
 
-}
-
-section.buttonSection{
-	float:left;
 }
