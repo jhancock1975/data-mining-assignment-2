@@ -126,14 +126,8 @@ function onMouseMoveEventHandler(e) {
 		var mX = 0;
 		var my = 0;
 		if (drawingOn) {
-			if (e.offsetX) {
-				mX = e.offsetX;
-				mY = e.offsetY;
-			} else if (e.layerX) {
-				mX = e.layerX;
-				mY = e.layerY;
-			}
-
+			mX = e.offsetX;
+			mY = e.offsetY;
 			g.beginPath();
 			g.moveTo(oldX, oldY);
 			g.lineTo(mX, mY);
