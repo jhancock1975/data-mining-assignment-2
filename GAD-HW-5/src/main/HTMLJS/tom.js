@@ -15,69 +15,6 @@ function doit2() {
 	drawMode = "LineStyle";
 }
 
-function drawThreeTriangles() {
-
-	// reset the transform
-	g.setTransform(1, 0, 0, 1, 0, 0);
-
-	setRandGradient();
-	g.fillRect(0, 0, g.canvas.width, g.canvas.height);
-
-	g.scale(1, 1);
-	g.translate(g.canvas.width / 2, g.canvas.height / 2);
-	var rC = 255;
-	var gC = 128;
-	var bC = 64;
-	var aC = 1.0;
-	g.fillStyle = randColor();
-
-	//shadow
-	g.fillStyle = "Black";
-	g.shadowOffsetX = 20;
-	g.shadowOffsetY = 20;
-	g.shadowBlur = 20;
-	//g.shadowColor = randColor();
-
-	var unit = g.canvas.width * 0.2;
-
-	var offset = g.canvas.width * 0.25;
-
-	g.shadowColor = randColor();
-
-	setRandGradient();
-
-	drawTriangle((0), -unit / 2, (-unit / 2), unit / 2, (unit / 2), unit / 2,
-			true);
-
-	g.shadowColor = randColor();
-
-	setRandGradient();
-
-	drawTriangle(-offset + (0), -unit / 2, -offset + (-unit / 2), unit / 2,
-			-offset + (unit / 2), unit / 2, true);
-
-	g.shadowColor = randColor();
-
-	setRandGradient();
-
-	drawTriangle(offset + (0), -unit / 2, offset + (-unit / 2), unit / 2,
-			offset + (unit / 2), unit / 2, true);
-
-	g.shadowColor = "transparent";
-
-}
-
-function setRandGradient() {
-	var gradient = g.createLinearGradient(Math.random() * g.canvas.width, Math
-			.random()
-			* g.canvas.height, Math.random() * g.canvas.width, Math.random()
-			* g.canvas.height);
-	gradient.addColorStop(0.0, randColor());
-	gradient.addColorStop(0.5, randColor());
-	gradient.addColorStop(1.0, randColor());
-	g.fillStyle = gradient;
-}
-
 function tColor(r, g, b, a) {
 	var result = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 	return result;
@@ -107,87 +44,13 @@ function doit3() {
 }
 
 function clear() {
-	endTimer();
 	// reset the transform
 	g.setTransform(1, 0, 0, 1, 0, 0);
-	//g.restore()
+	// g.restore()
 	// erase everything
 	g.clearRect(0, 0, g.canvas.width, g.canvas.height);
 }
 
-function startTimer() {
-	if (!timerRunning) {
-		greyOutButton("butStart");
-		ungreyButton("butEnd");
-		clear();
-		drawThreeTriangles();
-		var interval = document.getElementById("timerSlider").value;
-		//timerID = setInterval("drawRandTriangle()", interval);
-		timerRunning = true;
-		timerID = setInterval("drawThreeTriangles()", interval);
-	}
-}
-
-function endTimer() {
-	if (timerRunning) {
-		greyOutButton("butEnd");
-		ungreyButton("butStart");
-		clearInterval(timerID);
-		timerRunning = false;
-	}
-}
-
-function drawRandTriangle() {
-	g.fillStyle = randColor();
-	g.strokeStyle = randColor();
-	drawTriangle(Math.random() * g.canvas.width, Math.random()
-			* g.canvas.height, Math.random() * g.canvas.width, Math.random()
-			* g.canvas.height, Math.random() * g.canvas.width, Math.random()
-			* g.canvas.height, true);
-}
-
-function drawTriangle(x1, y1, x2, y2, x3, y3, fill) {
-	g.beginPath();
-	g.moveTo(x1, y1);
-	g.lineTo(x2, y2);
-	g.lineTo(x3, y3);
-	g.closePath();
-	if (fill) {
-		g.fill();
-	} else {
-		g.stroke();
-	}
-}
-
-function greyOutButton(butID) {
-	document.getElementById(butID).style.backgroundColor = "lightGrey";
-	document.getElementById(butID).style.color = "grey";
-}
-
-function ungreyButton(butID) {
-	document.getElementById(butID).style.backgroundColor = "lightBlue";
-	document.getElementById(butID).style.color = "black";
-}
-
-function readFile() {
-	var txtFile = new XMLHttpRequest();
-	txtFile.open("GET", ".//readme.txt", false);
-	txtFile.onreadystatechange = function() {
-		if (txtFile.readyState === 4) { // Makes sure the document is ready to parse.
-			if (txtFile.status === 200) { // Makes sure it's found the file.
-				allText = txtFile.responseText;
-				lines = txtFile.responseText.split("\n"); // Will separate each line into an array
-				alert(lines);
-
-			} else {
-				//alert("File not found.");
-			}
-		} else {
-			alert("File not ready.");
-		}
-	}
-	txtFile.send(null);
-}
 
 function onMouseUpEventHandler(e) {
 	switch (drawMode) {
@@ -200,7 +63,7 @@ function onMouseUpEventHandler(e) {
 		e.target.style.cursor = 'auto';
 		break;
 	case "LineStyle":
-		if (lineMode.inLineMode()){
+		if (lineMode.inLineMode()) {
 			console.log('exiting line mode');
 			lineMode.setInLineMode(false);
 		}
@@ -210,13 +73,17 @@ function onMouseUpEventHandler(e) {
 		break;
 	}
 }
-function handleGraphicsObjAndEventObj(g, e){
+function handleGraphicsObjAndEventObj(g, e) {
 	g.save();
 	g.setTransform(1, 0, 0, 1, 0, 0);
 
 	e.preventDefault();
 	e.stopPropagation();
 	e.target.style.cursor = 'crosshair';
+	g.strokeStyle = drawColor;
+	drawingOn = true;
+	g.lineCap = 'round';
+	g.lineWidth = document.getElementById("penWidthSlider").value;
 }
 
 var lineMode = LineMode();
@@ -224,39 +91,20 @@ var lineMode = LineMode();
 function onMouseDownEventHandler(e) {
 	switch (drawMode) {
 	case "FreeStyle":
-		handleGraphicsObjAndEventObj(g,e);
-
-		if (e.offsetX) {
-			oldX = e.offsetX;
-			oldY = e.offsetY;
-		} else if (e.layerX) {
-			oldX = e.layerX;
-			oldY = e.layerY;
-		}
-		//alert("mdown");
-		g.strokeStyle = drawColor;
-		drawingOn = true;
-		//g.strokeStyle = "blue";
-		g.lineCap = 'round';
-
-		g.lineWidth = document.getElementById("penWidthSlider").value;
+		handleGraphicsObjAndEventObj(g, e);
+		oldX = e.offsetX;
+		oldY = e.offsetY;
 		break;
 	case "LineStyle":
-		handleGraphicsObjAndEventObj(g,e);
+		handleGraphicsObjAndEventObj(g, e);
 		lineMode.setInLineMode(true);
 		lineMode.setLineModeStartX(e.offsetX);
 		lineMode.setLineModeStartY(e.offsetY);
 		console.log(lineMode.getLineModeStartY());
 		break;
 	case "SprayStyle":
-		//alert("mouse down spraystyle");
-		if (e.offsetX) {
-			newX = e.offsetX;
-			newY = e.offsetY;
-		} else if (e.layerX) {
-			newX = e.layerX;
-			newY = e.layerY;
-		}
+		newX = e.offsetX;
+		newY = e.offsetY;
 		for ( var i = 0; i < 15; i++) {
 			g.beginPath();
 			newX += (Math.random() * 30) - (Math.random() * 30);
@@ -264,7 +112,6 @@ function onMouseDownEventHandler(e) {
 			radius = Math.random() * 15;
 			g.fillStyle = drawColor;
 			g.strokeStyle = drawColor;
-			//g.moveTo(newX, newY);
 			g.arc(newX, newY, radius, 0, 2 * Math.PI, false);
 			g.fill();
 		}
@@ -290,18 +137,19 @@ function onMouseMoveEventHandler(e) {
 			g.beginPath();
 			g.moveTo(oldX, oldY);
 			g.lineTo(mX, mY);
-			//g.closePath();
 			g.stroke();
 			oldX = mX;
 			oldY = mY;
 		}
 		break;
 	case "LineStyle":
-		if (lineMode.inLineMode()){
+		if (lineMode.inLineMode()) {
 			mX = e.offsetX;
 			mY = e.offsetY;
 			g.beginPath();
-			g.moveTo(lineMode.getLineModeStartX(), lineMode.getLineModeStartY());
+			g
+					.moveTo(lineMode.getLineModeStartX(), lineMode
+							.getLineModeStartY());
 			g.lineTo(mX, mY);
 		}
 		break;
@@ -328,13 +176,12 @@ function randomizeColorButtons() {
 	document.getElementById('cButton3').style.backgroundColor = randLightColor();
 }
 
-//making a var outside of all function makes it global
+// making a var outside of all function makes it global
 var g;
 
 function onloadEventHandler() {
 	drawingOn = false;
-	//alert("loading");
-	// make global g (canvas context)
+	
 	var can = document.getElementById('canvas123');
 	g = can.getContext('2d');
 	g.canvas.width = window.innerWidth - 15;
@@ -345,15 +192,10 @@ function onloadEventHandler() {
 	can.addEventListener("mouseup", onMouseUpEventHandler, false);
 	can.addEventListener("mousedown", onMouseDownEventHandler, false);
 
-	//change button text
+	// change button text
 	document.querySelector('#but1').textContent = 'FreeStyle';
 	document.querySelector('#but2').textContent = 'LineStyle';
 	document.querySelector('#but3').textContent = 'SprayStyle';
-
-	//document.getElementById('but1').style.backgroundColor = randLightColor();
-	//document.getElementById('but2').style.backgroundColor = randLightColor();
-	//document.getElementById('but3').style.backgroundColor = randLightColor();
-	//document.getElementById('butClear').style.backgroundColor = randLightColor();
 
 	document.getElementById('cButton1').style.backgroundColor = randLightColor();
 	document.getElementById('cButton2').style.backgroundColor = randLightColor();
@@ -380,12 +222,12 @@ function onloadEventHandler() {
 	// Check for the various File API support.
 	if (window.File && window.FileReader && window.FileList && window.Blob) {
 		// Great success! All the File APIs are supported.
-		//alert('The File APIs are fully supported in this browser.');
+		// alert('The File APIs are fully supported in this browser.');
 	} else {
 		alert('The File APIs are not fully supported in this browser.');
 	}
 
 }
 
-//this makes onloadEventHandler the event handler for the "load" event
+// this makes onloadEventHandler the event handler for the "load" event
 window.addEventListener("load", onloadEventHandler, false);
