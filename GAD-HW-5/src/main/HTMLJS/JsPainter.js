@@ -73,6 +73,12 @@ function onMouseUpEventHandler(e) {
 		break;
 	}
 }
+/**
+ * Code refactored to avoid duplication
+ * 
+ * @param g - canvas context
+ * @param e - mouse event
+ */
 function handleGraphicsObjAndEventObj(g, e) {
 	g.save();
 	g.setTransform(1, 0, 0, 1, 0, 0);
@@ -119,7 +125,21 @@ function onMouseDownEventHandler(e) {
 	}
 
 }
-
+/**
+ * code refactored to avoid duplication
+ * 
+ * @param g - graphics context
+ * @param oldX - start point x value
+ * @param oldY - start point y value
+ * @param mX - end point x value
+ * @param mY - end point y value
+ */
+function drawLine(g, oldX, oldY, mX, mY){
+	g.beginPath();
+	g.moveTo(oldX, oldY);
+	g.lineTo(mX, mY);
+	g.stroke();
+}
 function onMouseMoveEventHandler(e) {
 	switch (drawMode) {
 	case "FreeStyle":
@@ -128,10 +148,7 @@ function onMouseMoveEventHandler(e) {
 		if (drawingOn) {
 			mX = e.offsetX;
 			mY = e.offsetY;
-			g.beginPath();
-			g.moveTo(oldX, oldY);
-			g.lineTo(mX, mY);
-			g.stroke();
+			drawLine(g, oldX, oldY, mX, mY);
 			oldX = mX;
 			oldY = mY;
 		}
