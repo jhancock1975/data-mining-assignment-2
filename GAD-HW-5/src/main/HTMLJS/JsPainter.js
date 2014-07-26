@@ -8,11 +8,13 @@
 var drawMode = "FreeStyle";
 
 function doit1() {
+	drawingOn = false;
 	drawMode = "FreeStyle";
 }
 
 function doit2() {
 	drawMode = "LineStyle";
+	lineMode.setClickCount(lineMode.ZERO_CLICK());
 }
 
 function tColor(r, g, b, a) {
@@ -40,6 +42,7 @@ function randColor() {
 }
 
 function doit3() {
+	drawingOn = false;
 	drawMode = "SprayStyle";
 }
 
@@ -49,9 +52,24 @@ function clear() {
 	// g.restore()
 	// erase everything
 	g.clearRect(0, 0, g.canvas.width, g.canvas.height);
+	lineMode.setClickCount(lineMode.ZERO_CLICK());
 }
 
-
+function MAX_TRIANGLE_RANDOMIZING(){
+	return 20;
+}
+function drawRandomTriangles(e){
+	numTriangles = Math.random() * 10; // draw up to 10 triangles 
+	for (var i = 0; i < numTriangles; i++){
+		drawTriangle(e.offsetX + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
+				e.offsetY + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
+				e.offsetX + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
+				e.offsetY + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
+				e.offsetX + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
+				e.offsetY + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
+				true);
+	}
+}
 function onMouseUpEventHandler(e) {
 	switch (drawMode) {
 	case "FreeStyle":
@@ -63,13 +81,32 @@ function onMouseUpEventHandler(e) {
 		e.target.style.cursor = 'auto';
 		break;
 	case "LineStyle":
-		if (lineMode.inLineMode()) {
-			console.log('exiting line mode');
-			lineMode.setInLineMode(false);
+		switch(lineMode.getClickCount()){
+		case lineMode.ZERO_CLICK():
+			break;
+		case lineMode.FIRST_CLICK():
+			break;
+		case lineMode.SECOND_CLICK():
+			g.clearRect();
+			handleGraphicsObjAndEventObj(g, e);
+			drawLine(g, lineMode.getLineModeStartX(), lineMode.getLineModeStartY(), e.offsetX, e.offsetY);
+			lineMode.setClickCount(lineMode.FIRST_CLICK());
+			lineMode.setLineModeStartX(e.offsetX);
+			lineMode.setLineModeStartY(e.offsetY);
+			break;
 		}
 		break;
 	case "SprayStyle":
-
+		numTriangles = Math.random() * 10; // draw up to 10 triangles 
+		for (var i = 0; i < numTriangles; i++){
+			drawTriangle(e.offsetX + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
+					e.offsetY + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
+					e.offsetX + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
+					e.offsetY + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
+					e.offsetX + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
+					e.offsetY + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
+					true);
+		}
 		break;
 	}
 }
@@ -101,26 +138,21 @@ function onMouseDownEventHandler(e) {
 		oldY = e.offsetY;
 		break;
 	case "LineStyle":
-		handleGraphicsObjAndEventObj(g, e);
-		lineMode.setInLineMode(true);
-		console.log(lineMode.inLineMode());
-		lineMode.setLineModeStartX(e.offsetX);
-		lineMode.setLineModeStartY(e.offsetY);
-		console.log(lineMode.getLineModeStartY());
+		switch (lineMode.getClickCount()){
+		case lineMode.ZERO_CLICK():
+			handleGraphicsObjAndEventObj(g, e);
+			lineMode.setLineModeStartX(e.offsetX);
+			lineMode.setLineModeStartY(e.offsetY);
+			lineMode.setClickCount(lineMode.FIRST_CLICK());
+			break;
+		case lineMode.FIRST_CLICK():
+			lineMode.setClickCount(lineMode.SECOND_CLICK());
+			break;
+		case lineMode.SECOND_CLICK():
+			break;
+		}
 		break;
 	case "SprayStyle":
-		newX = e.offsetX;
-		newY = e.offsetY;
-		for ( var i = 0; i < 15; i++) {
-			g.beginPath();
-			newX += (Math.random() * 30) - (Math.random() * 30);
-			newY += (Math.random() * 30) - (Math.random() * 30);
-			radius = Math.random() * 15;
-			g.fillStyle = drawColor;
-			g.strokeStyle = drawColor;
-			g.arc(newX, newY, radius, 0, 2 * Math.PI, false);
-			g.fill();
-		}
 		break;
 	}
 
@@ -140,6 +172,35 @@ function drawLine(g, oldX, oldY, mX, mY){
 	g.lineTo(mX, mY);
 	g.stroke();
 }
+
+/**
+ * code copied from sample code
+ * draws a triangle with points
+ * passed in, last parameter is color of triangle
+ * @param x1
+ * @param y1
+ * @param x2
+ * @param y2
+ * @param x3
+ * @param y3
+ * @param fill
+ */
+function drawTriangle(x1, y1, x2, y2, x3, y3, fill) {
+    g.beginPath();
+    g.moveTo(x1,y1);
+    g.lineTo(x2,y2);
+    g.lineTo(x3,y3);
+    g.closePath();
+    temp = g.fillStyle;
+    g.fillStyle = drawColor;
+    if (fill) {
+        g.fill();
+    }
+    else {
+        g.stroke();
+    }
+    g.fillStyle = temp;
+}
 function onMouseMoveEventHandler(e) {
 	switch (drawMode) {
 	case "FreeStyle":
@@ -154,14 +215,6 @@ function onMouseMoveEventHandler(e) {
 		}
 		break;
 	case "LineStyle":
-		if (lineMode.inLineMode()) {
-			g.clearRect();
-			temp = drawColor;
-			drawColor='red';
-			handleGraphicsObjAndEventObj(tempLayer, e);
-			drawLine(tempLayer, lineMode.getLineModeStartX(), lineMode.getLineModeStartY(), e.offsetX, e.offsetY);
-			drawColor= temp;
-		}
 		break;
 	case "SprayStyle":
 		break;
@@ -186,9 +239,8 @@ function randomizeColorButtons() {
 	document.getElementById('cButton3').style.backgroundColor = randLightColor();
 }
 
-// making a var outside of all function makes it global
+//making a var outside of all function makes it global
 var g;
-var tempLayer;
 
 function setupCanvasAndGetContext(canvasName){
 	var can = document.getElementById(canvasName);
@@ -200,14 +252,13 @@ function setupCanvasAndGetContext(canvasName){
 	can.addEventListener("mousemove", onMouseMoveEventHandler, false);
 	can.addEventListener("mouseup", onMouseUpEventHandler, false);
 	can.addEventListener("mousedown", onMouseDownEventHandler, false);
-	
+
 	return g;
 }
 function onloadEventHandler() {
 	drawingOn = false;
-	
+
 	g = setupCanvasAndGetContext('canvas123');
-	tempLayer = setupCanvasAndGetContext('canvasLayer2');
 
 	// change button text
 	document.querySelector('#but1').textContent = 'FreeStyle';
@@ -246,5 +297,5 @@ function onloadEventHandler() {
 
 }
 
-// this makes onloadEventHandler the event handler for the "load" event
+//this makes onloadEventHandler the event handler for the "load" event
 window.addEventListener("load", onloadEventHandler, false);

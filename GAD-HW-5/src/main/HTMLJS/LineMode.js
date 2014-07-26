@@ -24,12 +24,21 @@ LineMode  = function() {
 	getLineModeStartY = function(){
 		return lineModeStartY;
 	};
-	var drawingLine =  false;
-	setInLineMode = function(mode){
-		drawingLine = mode;
+	FIRST_CLICK = function(){
+		return 'first click';
+	}
+	SECOND_CLICK = function(){
+		return 'second click';
+	}
+	ZERO_CLICK = function(){
+		return 'zero click';
+	}
+	var clickCount =  ZERO_CLICK();
+	setClickCount = function(count){
+		clickCount = count;
 	};
-	inLineMode =  function(){
-		return drawingLine;
+	getClickCount = function(){
+		return clickCount;
 	}
 	return this;
 }
