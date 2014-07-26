@@ -55,11 +55,47 @@ function clear() {
 	lineMode.setClickCount(lineMode.ZERO_CLICK());
 }
 
+/**
+ * code copied from sample code
+ * draws a triangle with points
+ * passed in, last parameter is color of triangle
+ * @param x1
+ * @param y1
+ * @param x2
+ * @param y2
+ * @param x3
+ * @param y3
+ * @param fill
+ */
+function drawTriangle(x1, y1, x2, y2, x3, y3, fill) {
+    g.beginPath();
+    g.moveTo(x1,y1);
+    g.lineTo(x2,y2);
+    g.lineTo(x3,y3);
+    g.closePath();
+    
+    if (fill) {
+    	var temp = g.fillStyle;
+        g.fillStyle = drawColor;
+        g.fill();
+        g.fillStyle = temp;
+    }
+    else {
+    	var temp = g.strokeStyle;
+    	g.strokeStyle = drawColor;
+        g.stroke();
+        g.strokeStyle = temp;
+    }
+}
+
 function MAX_TRIANGLE_RANDOMIZING(){
 	return 20;
 }
+function MAX_NUM_TRIANGLES() {
+	return 5;
+}
 function drawRandomTriangles(e){
-	numTriangles = Math.random() * 10; // draw up to 10 triangles 
+	numTriangles = Math.random() * MAX_NUM_TRIANGLES(); // draw up to 10 triangles 
 	for (var i = 0; i < numTriangles; i++){
 		drawTriangle(e.offsetX + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
 				e.offsetY + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
@@ -67,7 +103,7 @@ function drawRandomTriangles(e){
 				e.offsetY + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
 				e.offsetX + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
 				e.offsetY + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
-				true);
+				false);
 	}
 }
 function onMouseUpEventHandler(e) {
@@ -97,16 +133,8 @@ function onMouseUpEventHandler(e) {
 		}
 		break;
 	case "SprayStyle":
-		numTriangles = Math.random() * 10; // draw up to 10 triangles 
-		for (var i = 0; i < numTriangles; i++){
-			drawTriangle(e.offsetX + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
-					e.offsetY + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
-					e.offsetX + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
-					e.offsetY + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
-					e.offsetX + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
-					e.offsetY + MAX_TRIANGLE_RANDOMIZING()*Math.random(),
-					true);
-		}
+		drawingOn  = false;
+		drawRandomTriangles(e);
 		break;
 	}
 }
@@ -153,6 +181,7 @@ function onMouseDownEventHandler(e) {
 		}
 		break;
 	case "SprayStyle":
+		drawingOn = true;
 		break;
 	}
 
@@ -173,34 +202,7 @@ function drawLine(g, oldX, oldY, mX, mY){
 	g.stroke();
 }
 
-/**
- * code copied from sample code
- * draws a triangle with points
- * passed in, last parameter is color of triangle
- * @param x1
- * @param y1
- * @param x2
- * @param y2
- * @param x3
- * @param y3
- * @param fill
- */
-function drawTriangle(x1, y1, x2, y2, x3, y3, fill) {
-    g.beginPath();
-    g.moveTo(x1,y1);
-    g.lineTo(x2,y2);
-    g.lineTo(x3,y3);
-    g.closePath();
-    temp = g.fillStyle;
-    g.fillStyle = drawColor;
-    if (fill) {
-        g.fill();
-    }
-    else {
-        g.stroke();
-    }
-    g.fillStyle = temp;
-}
+
 function onMouseMoveEventHandler(e) {
 	switch (drawMode) {
 	case "FreeStyle":
@@ -217,6 +219,9 @@ function onMouseMoveEventHandler(e) {
 	case "LineStyle":
 		break;
 	case "SprayStyle":
+		if (drawingOn){
+			drawRandomTriangles(e);
+		}
 		break;
 	}
 }
