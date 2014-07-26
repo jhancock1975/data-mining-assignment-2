@@ -10,7 +10,6 @@ button {
 
 }
 
-/*#but1
-{
-    background-color: lightgreen;
-}*/
+section.buttonSection{
+	float:left;
+}

@@ -76,7 +76,6 @@ function onMouseUpEventHandler(e) {
 function handleGraphicsObjAndEventObj(g, e) {
 	g.save();
 	g.setTransform(1, 0, 0, 1, 0, 0);
-
 	e.preventDefault();
 	e.stopPropagation();
 	e.target.style.cursor = 'crosshair';
@@ -98,6 +97,7 @@ function onMouseDownEventHandler(e) {
 	case "LineStyle":
 		handleGraphicsObjAndEventObj(g, e);
 		lineMode.setInLineMode(true);
+		console.log(lineMode.inLineMode());
 		lineMode.setLineModeStartX(e.offsetX);
 		lineMode.setLineModeStartY(e.offsetY);
 		console.log(lineMode.getLineModeStartY());
@@ -147,10 +147,9 @@ function onMouseMoveEventHandler(e) {
 			mX = e.offsetX;
 			mY = e.offsetY;
 			g.beginPath();
-			g
-					.moveTo(lineMode.getLineModeStartX(), lineMode
-							.getLineModeStartY());
+			g.moveTo(lineMode.getLineModeStartX(), lineMode.getLineModeStartY());
 			g.lineTo(mX, mY);
+			g.stroke();
 		}
 		break;
 	case "SprayStyle":
