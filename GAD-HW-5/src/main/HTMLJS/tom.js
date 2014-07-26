@@ -200,22 +200,31 @@ function onMouseUpEventHandler(e) {
 		e.target.style.cursor = 'auto';
 		break;
 	case "LineStyle":
+		if (lineMode.inLineMode()){
+			console.log('exiting line mode');
+			lineMode.setInLineMode(false);
+		}
 		break;
 	case "SprayStyle":
 
 		break;
 	}
 }
+function handleGraphicsObjAndEventObj(g, e){
+	g.save();
+	g.setTransform(1, 0, 0, 1, 0, 0);
+
+	e.preventDefault();
+	e.stopPropagation();
+	e.target.style.cursor = 'crosshair';
+}
+
+var lineMode = LineMode();
 
 function onMouseDownEventHandler(e) {
 	switch (drawMode) {
 	case "FreeStyle":
-		g.save();
-		g.setTransform(1, 0, 0, 1, 0, 0);
-
-		e.preventDefault();
-		e.stopPropagation();
-		e.target.style.cursor = 'crosshair';
+		handleGraphicsObjAndEventObj(g,e);
 
 		if (e.offsetX) {
 			oldX = e.offsetX;
@@ -233,6 +242,11 @@ function onMouseDownEventHandler(e) {
 		g.lineWidth = document.getElementById("penWidthSlider").value;
 		break;
 	case "LineStyle":
+		handleGraphicsObjAndEventObj(g,e);
+		lineMode.setInLineMode(true);
+		lineMode.setLineModeStartX(e.offsetX);
+		lineMode.setLineModeStartY(e.offsetY);
+		console.log(lineMode.getLineModeStartY());
 		break;
 	case "SprayStyle":
 		//alert("mouse down spraystyle");
@@ -283,6 +297,13 @@ function onMouseMoveEventHandler(e) {
 		}
 		break;
 	case "LineStyle":
+		if (lineMode.inLineMode()){
+			mX = e.offsetX;
+			mY = e.offsetY;
+			g.beginPath();
+			g.moveTo(lineMode.getLineModeStartX(), lineMode.getLineModeStartY());
+			g.lineTo(mX, mY);
+		}
 		break;
 	case "SprayStyle":
 		break;
