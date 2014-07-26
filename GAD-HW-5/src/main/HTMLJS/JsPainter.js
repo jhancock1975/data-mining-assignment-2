@@ -1,27 +1,46 @@
 ﻿//***********************************************************
+//based on sample code from 
+//http://faculty.eng.fau.edu/thomas/classes/graphical-application-development/sample-code/
 //Copyright 2013 Dr. Thomas Fernandez
 //All rights reserved.
 //***********************************************************
 
-//"use strict";
 
 var drawMode = "FreeStyle";
 
+/**
+ * handles the freestyle button
+ */
 function doit1() {
 	drawingOn = false;
 	drawMode = "FreeStyle";
 }
 
+/**
+ * handles the line style button
+ */
 function doit2() {
 	drawMode = "LineStyle";
 	lineMode.setClickCount(lineMode.ZERO_CLICK());
 }
 
+/**
+ * produces  color css string
+ * @param r
+ * @param g
+ * @param b
+ * @param a
+ * @returns {String}
+ */
 function tColor(r, g, b, a) {
 	var result = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 	return result;
 }
 
+/**
+ * produces random light color
+ * @returns
+ */
 function randLightColor() {
 	var rC = Math.floor(Math.random() * 256);
 	var gC = Math.floor(Math.random() * 256);
@@ -34,6 +53,10 @@ function randLightColor() {
 	return tColor(rC, gC, bC, 1.0);
 }
 
+/**
+ * produces random color
+ * @returns
+ */
 function randColor() {
 	var rC = Math.floor(Math.random() * 256);
 	var gC = Math.floor(Math.random() * 256);
@@ -41,6 +64,9 @@ function randColor() {
 	return tColor(rC, gC, bC, 1.0);
 }
 
+/**
+ * handles spray style button
+ */
 function doit3() {
 	drawingOn = false;
 	drawMode = "SprayStyle";
@@ -54,6 +80,30 @@ function clear() {
 	g.clearRect(0, 0, g.canvas.width, g.canvas.height);
 	lineMode.setClickCount(lineMode.ZERO_CLICK());
 }
+
+/**
+ * Code refactored to avoid duplication
+ * 
+ * @param g - canvas context
+ * @param e - mouse event
+ */
+function handleGraphicsObjAndEventObj(g, e) {
+	g.save();
+	g.setTransform(1, 0, 0, 1, 0, 0);
+	e.preventDefault();
+	e.stopPropagation();
+	e.target.style.cursor = 'crosshair';
+	g.strokeStyle = tColor( document.getElementById("rSlider").value,
+			 document.getElementById("gSlider").value,
+			 document.getElementById("bSlider").value,
+			 document.getElementById("aSlider").value
+			);
+	drawingOn = true;
+	g.lineCap = 'round';
+	g.lineWidth = document.getElementById("penWidthSlider").value;
+}
+
+var lineMode = LineMode();
 
 /**
  * code copied from sample code
@@ -75,19 +125,19 @@ function drawTriangle(x1, y1, x2, y2, x3, y3, fill) {
     g.closePath();
     
     if (fill) {
-    	var temp = g.fillStyle;
-        g.fillStyle = drawColor;
         g.fill();
-        g.fillStyle = temp;
     }
     else {
-    	var temp = g.strokeStyle;
-    	g.strokeStyle = drawColor;
         g.stroke();
-        g.strokeStyle = temp;
     }
 }
 
+/**
+ * I implemented these constants as functions
+ * that way the script will crash if I misspell the
+ * name of the constant.
+ * @returns {Number}
+ */
 function MAX_TRIANGLE_RANDOMIZING(){
 	return 20;
 }
@@ -106,6 +156,17 @@ function drawRandomTriangles(e){
 				false);
 	}
 }
+/**
+ * draws something based on the mode
+ * 
+ * for line mode, we count clicks modulo three
+ * don't draw anything unless its the second mouse down
+ * 
+ * for spraystyle, draw random triangles
+ *  
+ * 
+ * @param e
+ */
 function onMouseUpEventHandler(e) {
 	switch (drawMode) {
 	case "FreeStyle":
@@ -124,7 +185,6 @@ function onMouseUpEventHandler(e) {
 			break;
 		case lineMode.SECOND_CLICK():
 			g.clearRect();
-			handleGraphicsObjAndEventObj(g, e);
 			drawLine(g, lineMode.getLineModeStartX(), lineMode.getLineModeStartY(), e.offsetX, e.offsetY);
 			lineMode.setClickCount(lineMode.FIRST_CLICK());
 			lineMode.setLineModeStartX(e.offsetX);
@@ -138,37 +198,27 @@ function onMouseUpEventHandler(e) {
 		break;
 	}
 }
+
+
 /**
- * Code refactored to avoid duplication
+ * draws things on mouse down event
+ *
+ * for linestyle for the first click we remember where clicked
+ * otherwise, we increment the number of clicks modulo three
  * 
- * @param g - canvas context
- * @param e - mouse event
+ * for spraystyle, we just set mode to drawing on
+ * @param e
  */
-function handleGraphicsObjAndEventObj(g, e) {
-	g.save();
-	g.setTransform(1, 0, 0, 1, 0, 0);
-	e.preventDefault();
-	e.stopPropagation();
-	e.target.style.cursor = 'crosshair';
-	g.strokeStyle = drawColor;
-	drawingOn = true;
-	g.lineCap = 'round';
-	g.lineWidth = document.getElementById("penWidthSlider").value;
-}
-
-var lineMode = LineMode();
-
 function onMouseDownEventHandler(e) {
+	handleGraphicsObjAndEventObj(g, e);
 	switch (drawMode) {
 	case "FreeStyle":
-		handleGraphicsObjAndEventObj(g, e);
 		oldX = e.offsetX;
 		oldY = e.offsetY;
 		break;
 	case "LineStyle":
 		switch (lineMode.getClickCount()){
 		case lineMode.ZERO_CLICK():
-			handleGraphicsObjAndEventObj(g, e);
 			lineMode.setLineModeStartX(e.offsetX);
 			lineMode.setLineModeStartY(e.offsetY);
 			lineMode.setClickCount(lineMode.FIRST_CLICK());
@@ -202,7 +252,17 @@ function drawLine(g, oldX, oldY, mX, mY){
 	g.stroke();
 }
 
-
+/**
+ * draws things during mouse motion over canvas
+ * 
+ * for free style, draws short line to get curvy line effect
+ * 
+ * for lineStyle - does nothing
+ * 
+ * for spraystyle draws a trail of random triangles
+ * 
+ * @param e
+ */
 function onMouseMoveEventHandler(e) {
 	switch (drawMode) {
 	case "FreeStyle":
@@ -226,23 +286,9 @@ function onMouseMoveEventHandler(e) {
 	}
 }
 
-function pickCol1() {
-	drawColor = document.getElementById('cButton1').style.backgroundColor;
-}
 
-function pickCol2() {
-	drawColor = document.getElementById('cButton2').style.backgroundColor;
-}
 
-function pickCol3() {
-	drawColor = document.getElementById('cButton3').style.backgroundColor;
-}
 
-function randomizeColorButtons() {
-	document.getElementById('cButton1').style.backgroundColor = randLightColor();
-	document.getElementById('cButton2').style.backgroundColor = randLightColor();
-	document.getElementById('cButton3').style.backgroundColor = randLightColor();
-}
 
 //making a var outside of all function makes it global
 var g;
@@ -270,9 +316,7 @@ function onloadEventHandler() {
 	document.querySelector('#but2').textContent = 'LineStyle';
 	document.querySelector('#but3').textContent = 'SprayStyle';
 
-	document.getElementById('cButton1').style.backgroundColor = randLightColor();
-	document.getElementById('cButton2').style.backgroundColor = randLightColor();
-	document.getElementById('cButton3').style.backgroundColor = randLightColor();
+
 
 	// make other global variables
 	PI = 3.141592653589793;
@@ -285,12 +329,9 @@ function onloadEventHandler() {
 	document.querySelector('#but3').onclick = doit3;
 	document.querySelector('#butClear').onclick = clear;
 
-	document.getElementById('cButton1').onclick = pickCol1;
-	document.getElementById('cButton2').onclick = pickCol2;
-	document.getElementById('cButton3').onclick = pickCol3;
-	document.getElementById('RandomColorButton').onclick = randomizeColorButtons;
 
-	drawColor = document.getElementById('cButton1').style.backgroundColor;
+
+
 
 	// Check for the various File API support.
 	if (window.File && window.FileReader && window.FileList && window.Blob) {

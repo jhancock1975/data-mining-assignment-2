@@ -1,7 +1,9 @@
 ﻿button {
     font-size: 30px;
-    color: black;
-    background-color: lightblue;
+    color: brown;
+    background-color: lightGreen;
     height: 60px;
-
+}
+#canvasDiv {
+	border: 1px solid;
 }
