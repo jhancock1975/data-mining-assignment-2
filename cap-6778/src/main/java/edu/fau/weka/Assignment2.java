@@ -69,5 +69,4 @@ public class Assignment2 {
 		assign2.runClassifications();
 		((ClassPathXmlApplicationContext ) context).close();
 	}
-	f
 }
