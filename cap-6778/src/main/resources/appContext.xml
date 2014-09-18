@@ -21,4 +21,9 @@
 
 	  <context:component-scan base-package="edu.fau.weka"/>
 	  
+	  <bean id="assign2" class="edu.fau.weka.Assignment2" />
+	  
+	  <bean id="dataService" class="edu.fau.weka.DataServiceImpl">
+	  	<property name="fileName" value="/home/john/Documents/school/fall-2014/data-mining/assignments/assignment-1/Lymphoma96x4026.arff"/>
+	  </bean>
 </beans>

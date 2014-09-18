@@ -15,15 +15,17 @@
  */
 
 /*
- *    WekaDemo.java
- *    Copyright (C) 2009 University of Waikato, Hamilton, New Zealand
+ *    Assignment2.java
+ *    Copyright (C) 2014 John Hancock, Florida Atlantic University
  *
  */
 
 package edu.fau.weka;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -31,36 +33,40 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import weka.classifiers.Evaluation;
 import weka.classifiers.meta.AdaBoostM1;
 import weka.core.Instances;
-
+@Component
 public class Assignment2 {
-	static final Logger LOG = LoggerFactory.getLogger(Assignment2.class);
+
 	@Autowired
-	static ClassifierService classSvc;
+	private ClassifierService classSvc;
+	@Autowired
+	private DataService dataService;
+	
+	static final Logger LOG = LoggerFactory.getLogger(Assignment2.class);
+
+	public void runClassifications(){
+		try {
+			Instances data = dataService.getData();
+			Evaluation eval = new Evaluation(data);
+			eval.crossValidateModel(classSvc.getNextClassifier().getClassifier(), data, 10, new Random(1));
+			LOG.debug("false positive rate " + eval.falsePositiveRate(0));
+			LOG.debug("false negative rate " + eval.falsePositiveRate(1));
+		} catch (FileNotFoundException e) {
+			LOG.error(e.getMessage());
+		} catch (IOException e) {
+			LOG.error(e.getMessage());
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+		}
+	}
 	public static void main(String[] args) throws Exception{
 		ApplicationContext context =   new ClassPathXmlApplicationContext("appContext.xml");
-				
-		BufferedReader reader = new BufferedReader(
-				new FileReader("/home/john/Documents/school/fall-2014/data-mining/assignments/assignment-1/Lymphoma96x4026.arff"));
-		Instances data = new Instances(reader);
-		reader.close();
-		   data.setClassIndex(data.numAttributes() - 1); 
-		
-		AdaBoostM1 adaClasser = new AdaBoostM1();
-		weka.classifiers.functions.SMO scheme = new weka.classifiers.functions.SMO();
-		String[] options = weka.core.Utils.splitOptions("-P 100 -S 1 -I 10 -W weka.classifiers.meta.CostSensitiveClassifier -- -cost-matrix \"[0.0 2.0; 1.0 0.0]\" -S 1 -W weka.classifiers.trees.DecisionStump");
-		adaClasser.setOptions(options);
-		
-		Evaluation eval = new Evaluation(data);
-		
-		eval.crossValidateModel(classSvc.getNextClassifier().getClassifier(), data, 10, new Random(1));
-		
-		
-		LOG.debug("false positive rate " + eval.falsePositiveRate(0));
-		LOG.debug("false negative rate " + eval.falsePositiveRate(1));
+		Assignment2 assign2 = (Assignment2) context.getBean("assign2");
+		assign2.runClassifications();
 		((ClassPathXmlApplicationContext ) context).close();
 	}
 }
