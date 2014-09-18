@@ -5,8 +5,8 @@
  * We decided to take a functional approach because 
  * it cuts down on spelling-error bugs.
  * 
- * if you misspell the name of a variable or a function that is 
- * a method of the variable, an error informing you of this will
+ * if you misspell the name of a function that is 
+ * an error informing you of this will
  * be logged to the JavaScriptConsole.
  */
 LineMode  = function() {

@@ -184,7 +184,6 @@ function onMouseUpEventHandler(e) {
 		case lineMode.FIRST_CLICK():
 			break;
 		case lineMode.SECOND_CLICK():
-			g.clearRect();
 			drawLine(g, lineMode.getLineModeStartX(), lineMode.getLineModeStartY(), e.offsetX, e.offsetY);
 			lineMode.setClickCount(lineMode.FIRST_CLICK());
 			lineMode.setLineModeStartX(e.offsetX);
