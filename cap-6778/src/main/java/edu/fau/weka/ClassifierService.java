@@ -1,5 +1,7 @@
 package edu.fau.weka;
 
+import java.util.List;
+
 public interface ClassifierService {
-	ClassifierWrapper getNextClassifier();
+	List<ClassifierWrapper> getClassifiers();
 }

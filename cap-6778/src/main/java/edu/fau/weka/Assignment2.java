@@ -22,10 +22,9 @@
 
 package edu.fau.weka;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -36,7 +35,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import weka.classifiers.Evaluation;
-import weka.classifiers.meta.AdaBoostM1;
 import weka.core.Instances;
 @Component
 public class Assignment2 {
@@ -45,6 +43,8 @@ public class Assignment2 {
 	private ClassifierService classSvc;
 	@Autowired
 	private DataService dataService;
+	@Autowired
+	private ResultsService resultsService;
 	
 	static final Logger LOG = LoggerFactory.getLogger(Assignment2.class);
 
@@ -52,9 +52,13 @@ public class Assignment2 {
 		try {
 			Instances data = dataService.getData();
 			Evaluation eval = new Evaluation(data);
-			eval.crossValidateModel(classSvc.getNextClassifier().getClassifier(), data, 10, new Random(1));
-			LOG.debug("false positive rate " + eval.falsePositiveRate(0));
-			LOG.debug("false negative rate " + eval.falsePositiveRate(1));
+			List<ClassifierWrapper> classifiers = classSvc.getClassifiers(); 
+			for (ClassifierWrapper classifier: classifiers){
+				eval.crossValidateModel(classifier.getClassifier(), data, 10, new Random(1));
+				resultsService.saveResults(classifier, eval);
+				LOG.debug("false positive rate " + eval.falsePositiveRate(0));
+				LOG.debug("false negative rate " + eval.falsePositiveRate(1));
+			}
 		} catch (FileNotFoundException e) {
 			LOG.error(e.getMessage());
 		} catch (IOException e) {
