@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:c="http://www.springframework.org/schema/c"
-	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:c="http://www.springframework.org/schema/c" xmlns:cache="http://www.springframework.org/schema/cache"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:jee="http://www.springframework.org/schema/jee"
-	xmlns:lang="http://www.springframework.org/schema/lang"
-	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
@@ -19,11 +15,19 @@
 		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd">
 
-	  <context:component-scan base-package="edu.fau.weka"/>
-	  
-	  <bean id="assign2" class="edu.fau.weka.Assignment2" />
-	  
-	  <bean id="dataService" class="edu.fau.weka.DataServiceImpl">
-	  	<property name="fileName" value="/home/john/Documents/school/fall-2014/data-mining/assignments/assignment-1/Lymphoma96x4026.arff"/>
-	  </bean>
+	<context:component-scan base-package="edu.fau.weka" />
+
+	<bean id="assign2" class="edu.fau.weka.Assignment2" />
+
+	<bean id="dataService" class="edu.fau.weka.DataServiceImpl">
+		<property name="fileName"
+			value="/home/john/Documents/school/fall-2014/data-mining/assignments/assignment-1/Lymphoma96x4026.arff" />
+	</bean>
+
+	<bean id="booster" class="weka.classifiers.meta.AdaBoostM1"/>
+	<bean id="bagger" class="weka.classifiers.meta.Bagging"/>
+	<bean id="j48" class="weka.classifiers.trees.J48"/>
+	<bean id="stump" class="weka.classifiers.trees.DecisionStump"/>
+	<bean id="cheapo" class="weka.classifiers.meta.CostSensitiveClassifier" />
+	
 </beans>

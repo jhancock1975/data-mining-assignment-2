@@ -40,7 +40,7 @@ import weka.core.Instances;
 public class Assignment2 {
 
 	@Autowired
-	private ClassifierService classSvc;
+	private ClassifierRunningService classSvc;
 	@Autowired
 	private DataService dataService;
 	@Autowired
@@ -54,10 +54,18 @@ public class Assignment2 {
 			Evaluation eval = new Evaluation(data);
 			List<ClassifierWrapper> classifiers = classSvc.getClassifiers(); 
 			for (ClassifierWrapper classifier: classifiers){
-				eval.crossValidateModel(classifier.getClassifier(), data, 10, new Random(1));
-				resultsService.saveResults(classifier, eval);
-				LOG.debug("false positive rate " + eval.falsePositiveRate(0));
-				LOG.debug("false negative rate " + eval.falsePositiveRate(1));
+				if (classifier.getStatus() == ClassifierStatus.CONSTRUCT_SUCCESS){
+					eval.crossValidateModel(classifier.getClassifier(), data, 10, new Random(1));
+					resultsService.saveResults(classifier, eval);
+					LOG.debug("classifier " + classifier.getClassifierType().toString());
+					LOG.debug("Type II error cost " + classifier.getErrorCost());
+					LOG.debug("false positive rate " + eval.falsePositiveRate(0));
+					LOG.debug("false negative rate " + eval.falsePositiveRate(1));
+				} else if (classifier.getStatus() == ClassifierStatus.CONSTRUCT_ERROR){
+					LOG.error("Error constructing classifier" + classifier.toString());
+				} else {
+					LOG.error("Unknown status after attempt to construct classifier");
+				}
 			}
 		} catch (FileNotFoundException e) {
 			LOG.error(e.getMessage());

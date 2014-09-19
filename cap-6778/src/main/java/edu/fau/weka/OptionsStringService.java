@@ -1,6 +1,7 @@
 package edu.fau.weka;
 
+
 public interface OptionsStringService {
-	public String getOptionsString(MetaClassifierTypes meta, IterationCounts iterations,
-			String costMatrix, BaseClassifierTypes baseClassifier);
+	public String getOptionsString( String metaClass, IterationCounts iterations,
+			double type2ErrorCost, String baseClassifier);
 }
