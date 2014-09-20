@@ -70,7 +70,7 @@ public class Assignment2 {
 		try {
 			Instances data = dataService.getData();
 			
-			Evaluation eval = new Evaluation(data);
+			
 			
 			Map<ClassifierTypes, List<ClassifierWrapper>> classifierMap = classSvc.getClassifiers(); 
 			
@@ -82,6 +82,7 @@ public class Assignment2 {
 				for (ClassifierWrapper wrapper: wrapperList){
 					
 					if (wrapper.getStatus() == ClassifierStatus.CONSTRUCT_SUCCESS){
+						Evaluation eval = new Evaluation(data);
 
 						eval.crossValidateModel(wrapper.getClassifier(), data, 10, new Random(1));
 

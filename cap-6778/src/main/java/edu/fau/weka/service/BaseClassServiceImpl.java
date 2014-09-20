@@ -16,7 +16,7 @@ public class BaseClassServiceImpl  implements BaseClassService {
 	@Autowired
 	private DecisionStump stump;
 	
-	@Override
+	
 	public List<Classifier> getClassifiers() {
 		return Arrays.asList(new Classifier[] {j48, stump});
 	}

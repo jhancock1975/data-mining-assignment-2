@@ -17,7 +17,7 @@ public class MetaClassServiceImpl implements MetaClassService{
 	@Autowired
 	private Bagging bagger;
 	
-	@Override
+	
 	public List<Classifier> getClassifiers() {
 		return Arrays.asList(new Classifier[] {booster, bagger});
 	}
