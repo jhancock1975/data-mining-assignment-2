@@ -1,9 +1,12 @@
 package edu.fau.weka;
 
-import weka.classifiers.Evaluation;
+import java.util.List;
+import java.util.Map;
 
 public interface ResultsService {
 
-	void saveResults(ClassifierWrapper classifier, Evaluation eval);
+	public void generateGnuplot(Map<ClassifierTypes, List<ClassifierWrapper>> resultsObj);
+	public void generateGnuplot(ClassifierTypes classifierType, 
+			 List<ClassifierWrapper> wrapperList);
 
 }

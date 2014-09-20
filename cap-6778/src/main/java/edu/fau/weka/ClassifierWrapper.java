@@ -3,6 +3,7 @@ package edu.fau.weka;
 import org.springframework.stereotype.Component;
 
 import weka.classifiers.Classifier;
+import weka.classifiers.Evaluation;
 
 /**
  * encapsulates a classifier and 
@@ -19,6 +20,7 @@ public class ClassifierWrapper {
 	private ClassifierStatus status;
 	private ClassifierTypes classifierType;
 	private Double errorCost;
+	private Evaluation eval;
 	
 	public ClassifierWrapper(Classifier classifier) {
 		super();
@@ -55,5 +57,11 @@ public class ClassifierWrapper {
 	}
 	public void setErrorCost(Double errorRate) {
 		this.errorCost = errorRate;
+	}
+	public Evaluation getEval() {
+		return eval;
+	}
+	public void setEval(Evaluation eval) {
+		this.eval = eval;
 	}	
 }

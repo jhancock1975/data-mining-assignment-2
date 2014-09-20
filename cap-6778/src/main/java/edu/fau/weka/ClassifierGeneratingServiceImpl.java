@@ -1,7 +1,8 @@
 package edu.fau.weka;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ import weka.classifiers.trees.DecisionStump;
 import weka.classifiers.trees.J48;
 
 @Service
-public class ClassifierRunningServiceImpl implements ClassifierRunningService{
+public class ClassifierGeneratingServiceImpl implements ClassifierGeneratingService{
 	static final Logger LOG = LoggerFactory.getLogger(Assignment2.class);
 	@Autowired 
 	private OptionsStringService optionsService;
@@ -33,8 +34,10 @@ public class ClassifierRunningServiceImpl implements ClassifierRunningService{
 	@Autowired
 	private CostSensitiveClassifier cheapo;
 
-	public List<ClassifierWrapper> getClassifiers() throws ClassifierServiceException {
-		List<ClassifierWrapper> result = new ArrayList<ClassifierWrapper>();
+	public Map<ClassifierTypes, List<ClassifierWrapper>> getClassifiers() throws ClassifierServiceException {
+		
+		Map<ClassifierTypes, List<ClassifierWrapper>> result
+			= Assign2Util.initClassifierTypeWrapperListMap();
 
 		for (IterationCounts count: IterationCounts.values()){
 
@@ -55,6 +58,8 @@ public class ClassifierRunningServiceImpl implements ClassifierRunningService{
 							wrapper.setClassifierType(getClassifierType(meta.getClass(), base.getClass(), count.intVal()));
 							wrapper.setErrorCost(type2Cost);
 							wrapper.setStatus(ClassifierStatus.CONSTRUCT_SUCCESS);
+							List<ClassifierWrapper> wrapperList = result.get(wrapper.getClassifierType());
+							wrapperList.add(wrapper);
 
 						} catch(Exception e){
 							LOG.error("exception constructing classifier");
@@ -62,9 +67,8 @@ public class ClassifierRunningServiceImpl implements ClassifierRunningService{
 							wrapper.setStatus(ClassifierStatus.CONSTRUCT_ERROR);
 						}
 
-						result.add(wrapper);
-
 					}
+					
 				}
 			}
 		}

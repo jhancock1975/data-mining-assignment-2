@@ -2,10 +2,6 @@ package edu.fau.weka;
 
 import org.springframework.stereotype.Service;
 
-import weka.classifiers.meta.Bagging;
-import weka.classifiers.meta.CostSensitiveClassifier;
-import weka.classifiers.trees.J48;
-
 @Service
 public class OptionsStringServiceImpl implements OptionsStringService {
 	private String getCostMatrix(double type2ErrorCost){
