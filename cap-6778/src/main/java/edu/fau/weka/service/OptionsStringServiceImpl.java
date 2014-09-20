@@ -1,6 +1,8 @@
-package edu.fau.weka;
+package edu.fau.weka.service;
 
 import org.springframework.stereotype.Service;
+
+import edu.fau.weka.types.IterationCounts;
 
 @Service
 public class OptionsStringServiceImpl implements OptionsStringService {

@@ -1,4 +1,6 @@
-package edu.fau.weka;
+package edu.fau.weka.service;
+
+import edu.fau.weka.types.IterationCounts;
 
 
 public interface OptionsStringService {

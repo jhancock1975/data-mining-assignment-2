@@ -2,6 +2,9 @@ package edu.fau.weka;
 
 import org.springframework.stereotype.Component;
 
+import edu.fau.weka.service.ClassifierStatus;
+import edu.fau.weka.types.ClassifierTypes;
+
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 

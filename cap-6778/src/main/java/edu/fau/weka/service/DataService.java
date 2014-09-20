@@ -1,4 +1,4 @@
-package edu.fau.weka;
+package edu.fau.weka.service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

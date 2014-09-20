@@ -22,7 +22,7 @@
 
 	<bean id="assign2" class="edu.fau.weka.Assignment2" />
 
-	<bean id="dataService" class="edu.fau.weka.DataServiceImpl">
+	<bean id="dataService" class="edu.fau.weka.service.DataServiceImpl">
 		<property name="fileName"
 			value="${Assignment2.classifierInput}" />
 	</bean>

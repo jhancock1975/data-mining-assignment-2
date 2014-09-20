@@ -1,4 +1,4 @@
-package edu.fau.weka;
+package edu.fau.weka.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,6 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import edu.fau.weka.Assignment2;
+import edu.fau.weka.ClassifierWrapper;
+import edu.fau.weka.types.ClassifierTypes;
+import edu.fau.weka.types.ErrorTypes;
 @Service
 public class ResultsServiceImpl implements ResultsService{
 	

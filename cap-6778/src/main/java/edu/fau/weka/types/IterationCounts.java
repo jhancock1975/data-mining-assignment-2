@@ -1,4 +1,4 @@
-package edu.fau.weka;
+package edu.fau.weka.types;
 
 public enum IterationCounts {
 	ten(10), twentyFive(25);

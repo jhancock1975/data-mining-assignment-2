@@ -1,4 +1,4 @@
-package edu.fau.weka;
+package edu.fau.weka.service;
 
 import java.util.Arrays;
 import java.util.List;

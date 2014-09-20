@@ -1,4 +1,4 @@
-package edu.fau.weka;
+package edu.fau.weka.types;
 
 public enum ErrorTypes {
 	Type1(0), Type2(1);

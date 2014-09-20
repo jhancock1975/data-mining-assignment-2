@@ -1,4 +1,4 @@
-package edu.fau.weka;
+package edu.fau.weka.service;
 /**
  * we introduce this exception
  * class because Weka classifier constructor

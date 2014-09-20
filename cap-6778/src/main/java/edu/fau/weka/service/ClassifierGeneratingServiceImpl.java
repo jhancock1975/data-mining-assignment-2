@@ -1,4 +1,4 @@
-package edu.fau.weka;
+package edu.fau.weka.service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import edu.fau.weka.Assign2Util;
+import edu.fau.weka.Assignment2;
+import edu.fau.weka.ClassifierWrapper;
+import edu.fau.weka.types.ClassifierTypes;
+import edu.fau.weka.types.IterationCounts;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.meta.AdaBoostM1;

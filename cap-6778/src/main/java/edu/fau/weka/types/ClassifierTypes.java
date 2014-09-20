@@ -1,4 +1,4 @@
-package edu.fau.weka;
+package edu.fau.weka.types;
 
 public enum ClassifierTypes {
 	BOOSTING_J48_10("Boosting J48 10"),

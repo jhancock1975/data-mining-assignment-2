@@ -37,6 +37,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
+import edu.fau.weka.service.ClassifierGeneratingService;
+import edu.fau.weka.service.ClassifierStatus;
+import edu.fau.weka.service.DataService;
+import edu.fau.weka.service.ResultsService;
+import edu.fau.weka.types.ClassifierTypes;
+
 import weka.classifiers.Evaluation;
 import weka.core.Instances;
 @Component
