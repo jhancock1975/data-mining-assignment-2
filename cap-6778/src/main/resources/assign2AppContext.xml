@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<bean id="assign2" class="edu.fau.weka.Assignment2" />
+
+	<bean id="dataService" class="edu.fau.weka.service.DataServiceImpl">
+		<property name="fileName"
+			value="${Assignment2.classifierInput}" />
+	</bean>
+	
+	<bean id="outputDir" class="java.lang.String" >
+		<constructor-arg type="java.lang.String" value="${Assigment2.outputDir}"/>
+	</bean>
+
+	<bean id="booster" class="weka.classifiers.meta.AdaBoostM1"/>
+	<bean id="bagger" class="weka.classifiers.meta.Bagging"/>
+	<bean id="j48" class="weka.classifiers.trees.J48"/>
+	<bean id="stump" class="weka.classifiers.trees.DecisionStump"/>
+	<bean id="cheapo" class="weka.classifiers.meta.CostSensitiveClassifier" />
+
+</beans>

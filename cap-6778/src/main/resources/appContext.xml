@@ -19,22 +19,10 @@
 	
 	<context:property-placeholder location="classpath:Assignment2.properties" />
 	
-
-	<bean id="assign2" class="edu.fau.weka.Assignment2" />
-
-	<bean id="dataService" class="edu.fau.weka.service.DataServiceImpl">
-		<property name="fileName"
-			value="${Assignment2.classifierInput}" />
-	</bean>
+	<import resource="resources/assign4AppContext.xml"/>
 	
-	<bean id="outputDir" class="java.lang.String" >
-		<constructor-arg type="java.lang.String" value="${Assigment2.outputDir}"/>
-	</bean>
-
-	<bean id="booster" class="weka.classifiers.meta.AdaBoostM1"/>
-	<bean id="bagger" class="weka.classifiers.meta.Bagging"/>
-	<bean id="j48" class="weka.classifiers.trees.J48"/>
-	<bean id="stump" class="weka.classifiers.trees.DecisionStump"/>
-	<bean id="cheapo" class="weka.classifiers.meta.CostSensitiveClassifier" />
+	<import resource="resources/assign2AppContext.xml"/>
+	
+	
 	
 </beans>
