@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.fau.weka.Assign2Util;
+import edu.fau.weka.AssignUtil;
 import edu.fau.weka.Assignment2;
 import edu.fau.weka.ClassifierWrapper;
 import edu.fau.weka.types.ClassifierTypes;
@@ -43,7 +43,7 @@ public class ClassifierGeneratingServiceImpl implements ClassifierGeneratingServ
 	public Map<ClassifierTypes, List<ClassifierWrapper>> getClassifiers() throws ClassifierServiceException {
 		
 		Map<ClassifierTypes, List<ClassifierWrapper>> result
-			= Assign2Util.initClassifierTypeWrapperListMap();
+			= AssignUtil.initClassifierTypeWrapperListMap();
 
 		for (IterationCounts count: IterationCounts.values()){
 

@@ -120,7 +120,7 @@ public class Assignment2 {
 		}
 	}
 	public static void main(String[] args) throws Exception{
-		ApplicationContext context =   new ClassPathXmlApplicationContext("appContext.xml");
+		ApplicationContext context =   new ClassPathXmlApplicationContext(AssignUtil.SPRING_CONTEXT_FILE_NAME);
 		Assignment2 assign2 = (Assignment2) context.getBean("assign2");
 		assign2.runClassifications();
 		((ClassPathXmlApplicationContext ) context).close();
