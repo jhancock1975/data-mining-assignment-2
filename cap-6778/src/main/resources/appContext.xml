@@ -19,9 +19,9 @@
 	
 	<context:property-placeholder location="classpath:Assignment2.properties" />
 	
-	<import resource="resources/assign4AppContext.xml"/>
+	<import resource="classpath:assign4AppContext.xml"/>
 	
-	<import resource="resources/assign2AppContext.xml"/>
+	<import resource="classpath:assign2AppContext.xml"/>
 	
 	
 	
