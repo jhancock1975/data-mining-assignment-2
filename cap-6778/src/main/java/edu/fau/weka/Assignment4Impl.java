@@ -86,7 +86,7 @@ public class Assignment4Impl implements Assignment4 {
 		}
 		
 	}
-	public void  runClassifiers(String dataSourceName) throws Exception {
+	public void  runClassifiers() throws Exception {
 
 		Instances data = dataSvc.getData();
 
@@ -135,7 +135,7 @@ public class Assignment4Impl implements Assignment4 {
 		ApplicationContext context =   new ClassPathXmlApplicationContext(AssignUtil.SPRING_CONTEXT_FILE_NAME);
 		Assignment4Impl assign4 = (Assignment4Impl ) context.getBean("assign4");
 		try {
-			assign4.runClassifiers(args[0]);
+			assign4.runClassifiers();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally{
