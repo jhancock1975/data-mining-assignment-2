@@ -2,15 +2,108 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans.xsd
-	http://www.springframework.org/schema/aop 
-	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
-
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+		http://www.springframework.org/schema/data/jpa 
+		http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util-2.5.xsd
+	">
 	<aop:aspectj-autoproxy />
 	
-	<bean id="assign4" class="edu.fau.weka.Assignment4Impl" />
+	<context:property-placeholder location="classpath:Assignment4.properties" />
+	
+	<bean id="assign4ClassifierSvc" class="edu.fau.weka.service.Assign4ClassifierSerivceImpl"/>
+	
+	<bean id="assign4" class="edu.fau.weka.Assignment4Impl" >
+		<property name="classifierService" ref="assign4ClassifierSvc"/>
+		<!--  j48 defined with other classifiers below -->
+		<property name="j48" ref="j48"/>
+	</bean>
 	
 	<!-- Aspect -->
 	<bean id="classifierReporter" class="edu.fau.weka.aspect.ClassifierReporter" />
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://192.168.1.55:3306/assign4" />
+		<property name="username" value="john" />
+		<property name="password" value="ramanujan" />
+		<property name="initialSize" value="5" />
+		<property name="maxActive" value="10" />
+	</bean>
+	
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="edu.fau.weka" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="dialect">org.hibernate.dialect.HSQLDialect</prop>
+			</props>
+		</property>
+	</bean>
+	<bean
+		class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+	<!-- You need these to stop Hibernate from throwing No Hibernate Session 
+		bound to thread, and configuration does not allow creation of non-transactional 
+		one here Exceptions -->
+	<tx:annotation-driven transaction-manager="txManager" />
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<!--  feature selection techniques -->
+	<util:list id="attributeSelectionEvaluators" value-type="weka.attributeSelection.ASEvaluation">
+		<bean id="infoGainEvaluator" class="weka.attributeSelection.InfoGainAttributeEval"/>
+		<bean id="chiSquaredASEvaluator" class="weka.attributeSelection.ChiSquaredAttributeEval"/>
+		<bean id="gainRatioEvaluator" class="weka.attributeSelection.GainRatioAttributeEval"/>
+		<bean id="symmetricUncertainty" class="weka.attributeSelection.SymmetricalUncertAttributeEval"/>
+		<bean id="reliefF" class="weka.attributeSelection.ReliefFAttributeEval">
+			<property name="weightByDistance" value="false"/>
+		</bean>
+		<bean id="reliefFW" class="weka.attributeSelection.ReliefFAttributeEval">
+			<property name="weightByDistance" value="true"/>
+		</bean>
+	</util:list>
+	
+	<bean id="attributeSelectionEvaluationService" class="edu.fau.weka.service.AttributeSelectionEvaluationServiceImpl">
+		<property name="ASEvaluationList" ref="attributeSelectionEvaluators"/>
+	</bean>
+	
+	<!--  classifiers -->
+	<bean id="naiveBayes" class="weka.classifiers.bayes.NaiveBayes"/>
+	<bean id="fiveNN" class="weka.classifiers.lazy.IBk">
+		<property name="KNN" value="5"/>
+	</bean>
+	<bean id="j48" class="weka.classifiers.trees.J48"/>
+	
+	<!-- numbers of features to retain -->
+	<util:list id="numFeaturesList" value-type="java.lang.Integer">
+		<value>5</value>
+		<value>6</value>
+		<value>7</value>
+		<value>8</value>
+		<value>9</value>
+		<value>10</value>
+		<value>20</value>
+		<value>50</value>
+		<value>100</value>
+		<value>200</value>
+	</util:list>
+	<bean id="numFeaturesSvc" class="edu.fau.weka.service.NumFeaturesServiceImpl">
+		<property name="numFeaturesList" ref="numFeaturesList"/>
+	</bean>
+	
 </beans>
