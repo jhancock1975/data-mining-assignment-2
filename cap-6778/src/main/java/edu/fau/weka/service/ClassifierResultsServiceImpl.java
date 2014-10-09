@@ -17,7 +17,9 @@ public class ClassifierResultsServiceImpl implements ClassifierResultsService {
 	private FeatureListService featureSvc;
 	public void saveResults(ClassifierResults results) {
 		classifierRepo.save(results);
-		parseAndSaveFeatures(results);
+		if (results.getFeatureSet() != null){
+			parseAndSaveFeatures(results);
+		} 
 	}
 	private void parseAndSaveFeatures(ClassifierResults results) {
 		String rawFeatureList = results.getFeatureSet();
