@@ -13,6 +13,7 @@ import weka.attributeSelection.ASEvaluation;
 import weka.attributeSelection.Ranker;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
+import weka.classifiers.trees.J48;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
@@ -39,10 +40,15 @@ public class Assignment4Impl implements Assignment4 {
 	public void setClassifierService(ClassifierService classifierService){
 		this.classifierService = classifierService;
 	}
+	private J48 j48;
+	@Required 
+	public void setJ48(J48 j48){
+		this.j48 = j48;
+	}
 	static final Date experimentStartTime = new Date(System.currentTimeMillis()); 
 
 	private ClassifierResults saveResults(ClassifierResults results, Instances filteredInstances, 
-			Evaluation evaluation, Classifier base, ASEvaluation asEval, Ranker search){
+			Evaluation evaluation, Classifier base, ASEvaluation asEval, int numAttributes){
 		results.setFeatureSet(asEval == null ? null:filteredInstances.toSummaryString());
 		results.setFpr(evaluation.falsePositiveRate(0));
 		results.setFnr(evaluation.falsePositiveRate(1));
@@ -52,10 +58,34 @@ public class Assignment4Impl implements Assignment4 {
 		results.setFilterClassName(asEval == null ? "No feature selection" : asEval.getClass().getName());
 		results.setEvaluation(evaluation);
 		results.setExperimentStartTime(experimentStartTime);
-		results.setFeatureSetSize(search.getNumToSelect());
+		results.setFeatureSetSize(numAttributes);
 		return results;
 	}
 
+	private void runJ48Classifier(Instances data) throws Exception {
+		ClassifierResults results = new ClassifierResults();
+		
+		Evaluation evaluation= new Evaluation(data);
+		evaluation.crossValidateModel(this.j48, data, 10, new Random(1));
+		results = saveResults(results, data, 
+				evaluation, j48, null, data.numAttributes()-1);
+		classifierResultsSvc.saveResults(results);
+		
+	}
+
+	private void runClassifiersWithNoFiltering(List<Classifier> classifiers,
+			Instances data) throws Exception {
+		for (Classifier classifier: classifiers){
+			ClassifierResults results = new ClassifierResults();
+			
+			Evaluation evaluation= new Evaluation(data);
+			evaluation.crossValidateModel(classifier, data, 10, new Random(1));
+			results = saveResults(results, data, 
+					evaluation, classifier, null, data.numAttributes()-1);
+			classifierResultsSvc.saveResults(results);
+		}
+		
+	}
 	public void  runClassifiers(String dataSourceName) throws Exception {
 
 		Instances data = dataSvc.getData();
@@ -63,6 +93,9 @@ public class Assignment4Impl implements Assignment4 {
 		List<ASEvaluation> asEvalList = attributeSelEvalSvc.getAttributeSelectionEvaluators();
 		List<Integer> numFeaturesList = numFeaturesService.getNumFeaturesList();
 		List<Classifier> classifiers = classifierService.getClassifiers();
+		
+		runClassifiersWithNoFiltering(classifiers, data);
+		runJ48Classifier(data);
 		
 		for (Classifier classifier: classifiers){
 			for (ASEvaluation asEval: asEvalList){
@@ -79,24 +112,24 @@ public class Assignment4Impl implements Assignment4 {
 					
 					Instances filteredData;
 					
-					if (asEval == null){
-						filteredData = data;
-					} else {
-						results.setFilterClassName(asEval.getClass().getName());
-						filter.setEvaluator(asEval);
-						filteredData  = Filter.useFilter(data, filter);
-					}
+					
+					results.setFilterClassName(asEval.getClass().getName());
+					filter.setEvaluator(asEval);
+					filteredData  = Filter.useFilter(data, filter);
+					
 					
 					Evaluation evaluation= new Evaluation(data);
 					evaluation.crossValidateModel(classifier, filteredData, 10, new Random(1));
 					
-					results = saveResults(results, filteredData==data ? null:filteredData, 
-							evaluation, classifier, asEval, search);
+					results = saveResults(results, filteredData, 
+							evaluation, classifier, asEval, filteredData.numAttributes()-1);
 					classifierResultsSvc.saveResults(results);
 				}
 			}
 		}
 	}
+
+
 
 	public static void main(String[] args){
 		ApplicationContext context =   new ClassPathXmlApplicationContext(AssignUtil.SPRING_CONTEXT_FILE_NAME);

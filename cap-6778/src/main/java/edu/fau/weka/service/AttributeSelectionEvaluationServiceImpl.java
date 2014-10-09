@@ -13,7 +13,6 @@ public class AttributeSelectionEvaluationServiceImpl implements
 	@Required
 	public void setASEvaluationList (List<ASEvaluation> list){
 		this.aSEvaluationList = list;
-		this.aSEvaluationList.add(null); // bad style! use this a flag to run classifiers on un-filtered data
 	}
 	public List<ASEvaluation> getAttributeSelectionEvaluators() {
 		return this.aSEvaluationList;
