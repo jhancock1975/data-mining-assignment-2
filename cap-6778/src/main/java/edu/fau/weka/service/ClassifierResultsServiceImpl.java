@@ -1,5 +1,6 @@
 package edu.fau.weka.service;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,5 +34,25 @@ public class ClassifierResultsServiceImpl implements ClassifierResultsService {
 				featureSvc.saveFeature(new FeatureLists(results.getClassifierResultId(), m.group(1)));
 			}
 		}
+	}
+	public List<Double> getLastFprResultsFor(String classifierName,
+			String attribEvalName) {
+		return classifierRepo.getLastFprResultsFor(classifierName, attribEvalName);
+	}
+	public List<Double> getLastFnrResultsFor(String classifierName,
+			String attribEvalName) {
+		return classifierRepo.getLastFnrResultsFor(classifierName, attribEvalName);
+	}
+	public List<Double> getLastPAucResultsFor(String classifierName,
+			String attribEvalName) {
+		return classifierRepo.getLastPAucResultsFor(classifierName, attribEvalName);
+	}
+	public List<Double> getLastNAucResultsFor(String classifierName,
+			String attribEvalName) {
+		return classifierRepo.getLastNAucResultsFor(classifierName, attribEvalName);
+	}
+	public List<Double> getLastWAucResultsFor(String classifierName,
+			String attribEvalName) {
+		return classifierRepo.getLastWAucResultsFor(classifierName, attribEvalName);
 	}
 }
