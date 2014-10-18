@@ -35,16 +35,22 @@ public class Assignment4Impl implements Assignment4 {
 	@Autowired
 	private NumFeaturesService numFeaturesService;
 	
+	@Autowired
+	private Assign4Reports reporter;
+	
 	private ClassifierService classifierService;
 	@Required
 	public void setClassifierService(ClassifierService classifierService){
 		this.classifierService = classifierService;
 	}
+	
 	private J48 j48;
 	@Required 
 	public void setJ48(J48 j48){
 		this.j48 = j48;
 	}
+	
+	
 	static final Date experimentStartTime = new Date(System.currentTimeMillis()); 
 
 	private ClassifierResults saveResults(ClassifierResults results, Instances filteredInstances, 
@@ -54,6 +60,7 @@ public class Assignment4Impl implements Assignment4 {
 		results.setFnr(evaluation.falsePositiveRate(1));
 		results.setnAuc(evaluation.areaUnderROC(0));
 		results.setpAuc(evaluation.areaUnderROC(1));
+		results.setwAuc(evaluation.weightedAreaUnderROC());
 		results.setClassifierClassName(base.getClass().getName());
 		results.setFilterClassName(asEval == null ? "No feature selection" : asEval.getClass().getName());
 		results.setEvaluation(evaluation);
@@ -112,8 +119,6 @@ public class Assignment4Impl implements Assignment4 {
 					
 					Instances filteredData;
 					
-					
-					results.setFilterClassName(asEval.getClass().getName());
 					filter.setEvaluator(asEval);
 					filteredData  = Filter.useFilter(data, filter);
 					
@@ -129,13 +134,16 @@ public class Assignment4Impl implements Assignment4 {
 		}
 	}
 
-
+	public void runClassifiersAndReports() throws Exception{
+		runClassifiers();
+		reporter.doReports();
+	}
 
 	public static void main(String[] args){
 		ApplicationContext context =   new ClassPathXmlApplicationContext(AssignUtil.SPRING_CONTEXT_FILE_NAME);
 		Assignment4Impl assign4 = (Assignment4Impl ) context.getBean("assign4");
 		try {
-			assign4.runClassifiers();
+			assign4.runClassifiersAndReports();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally{

@@ -2,6 +2,7 @@ package edu.fau.weka.dao;
 
 import java.util.List;
 
+import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,34 +16,26 @@ public class ClassifierResultsRepositoryImpl  extends RepositoryBase implements 
 		currentSession().save(classifierResults);
 	}
 
-	public List<Double> getLastFprResultsFor(String classifierName,
+	public List<ClassifierResults> getLastResultsFor(String classifierName,
 			String attribEvalName) {
-		currentSession().
+		SQLQuery query = currentSession()
+				.createSQLQuery("call getLastResults('"+classifierName+"','"+attribEvalName+"')").addEntity(ClassifierResults.class);
+		List<ClassifierResults> result = query.list();
+		return result;
 	}
 
-	public List<Double> getLastFnrResultsFor(String classifierName,
-			String attribEvalName) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<String> getClassifierNames() {
+		SQLQuery query = currentSession()
+				.createSQLQuery("call getClassifierNames()");
+		List<String> result = query.list();
+		return result;
 	}
 
-	public List<Double> getLastPAucResultsFor(String classifierName,
-			String attribEvalName) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<String> getAttribEvalNames() {
+		SQLQuery query = currentSession()
+				.createSQLQuery("call getAttribEvalNames()");
+		List<String> result = query.list();
+		return result;
 	}
 
-	public List<Double> getLastNAucResultsFor(String classifierName,
-			String attribEvalName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<Double> getLastWAucResultsFor(String classifierName,
-			String attribEvalName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	
 }

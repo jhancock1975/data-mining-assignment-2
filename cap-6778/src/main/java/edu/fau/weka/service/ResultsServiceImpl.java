@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import edu.fau.weka.AssignUtil;
 import edu.fau.weka.Assignment2;
 import edu.fau.weka.ClassifierWrapper;
 import edu.fau.weka.types.ClassifierTypes;
@@ -78,20 +79,11 @@ public class ResultsServiceImpl implements ResultsService{
 		
 	}
 	
-	private static final StringBuilder aucGnuPlotFileHeader 
-	= new StringBuilder().append("set term postscript eps 22\n")
-		.append("set key outside\n")
-		.append("set key center top\n")
-		.append("set xlabel 'Type II Error Cost'\n")
-		.append("set ylabel 'Area Under ROC'\n")
-		.append("set linestyle 1 lt 2 lw 3\n")
-		.append("set logscale x\n")
-		.append("set key box linestyle 1 \n")
-		.append("set output '");
+	
 
 	private void writeAucGnuPlot(String fullPath, String aucGnuPlotFileName, String title) {
 		
-		StringBuilder gnuPlotStr = new StringBuilder(aucGnuPlotFileHeader); 
+		StringBuilder gnuPlotStr = new StringBuilder(AssignUtil.aucGnuPlotFileHeader("Type II Error Cost", "Area Under ROC")); 
 		
 		gnuPlotStr.append(title.replaceAll(" ", "-")).append("-AUC.ps'\n");
 		
