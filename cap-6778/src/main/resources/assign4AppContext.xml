@@ -73,7 +73,7 @@
 		<bean id="reliefF" class="weka.attributeSelection.ReliefFAttributeEval">
 			<property name="weightByDistance" value="false"/>
 		</bean>
-		<bean id="reliefFW" class="weka.attributeSelection.ReliefFAttributeEval">
+		<bean id="reliefFW" class="edu.fau.weka.wrappers.ReliefFWeightedWrapper">
 			<property name="weightByDistance" value="true"/>
 		</bean>
 	</util:list>
@@ -106,4 +106,7 @@
 		<property name="numFeaturesList" ref="numFeaturesList"/>
 	</bean>
 	
+	<bean id="assign4OutputDir" class="java.lang.String" >
+		<constructor-arg type="java.lang.String" value="${Assigment4.outputDir}"/>
+	</bean>
 </beans>

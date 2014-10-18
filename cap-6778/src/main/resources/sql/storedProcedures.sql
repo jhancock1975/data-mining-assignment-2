@@ -18,7 +18,8 @@ CREATE PROCEDURE getClassifierNames()
 BEGIN
 	declare lastExpTime timestamp;
 	select max(experimentStartTime) from ClassifierResults into lastExpTime;
-	select classifierClassName from ClassifierResults 
+	select distinct classifierClassName from ClassifierResults r 
+		inner join FeatureLists f on r.classifierResultId=f.classifierResultId  
 		where experimentStartTime = lastExpTime;
 END //
 delimiter ;
@@ -30,7 +31,18 @@ CREATE PROCEDURE getAttribEvalNames()
 BEGIN
 	declare lastExpTime timestamp;
 	select max(experimentStartTime) from ClassifierResults into lastExpTime;
-	select filterClassName from ClassifierResults 
+	select distinct filterClassName from ClassifierResults r 
+		inner join FeatureLists f on r.classifierResultId=f.classifierResultId  
 		where experimentStartTime = lastExpTime;
 END //
 delimiter ;
+
+/* queries for answering part 2 about overlap with j48 */
+set @expTime=(select max(experimentStartTime) from ClassifierResults);
+select count(fl.attribute) as 'j48 overlap', classifierClassName, filterClassName 
+	from ClassifierResults cl 
+	inner join FeatureLists fl on cl.classifierResultId=fl.classifierResultId 
+	where fl.attribute in ('GENE1125X', 'GENE1391X', 'GENE1567X', 'GENE2996X', 'GENE3732X', 'GENE3941X') 
+		and experimentStartTime=@expTime 
+		and featureSetSize=6 
+	group by classifierClassName, filterClassName;
