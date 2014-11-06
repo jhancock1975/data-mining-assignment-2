@@ -33,8 +33,11 @@ public class Assign4Reports {
 						classifierResultsSvc.getLastFprResultsFor(classifierName, attribSelEvalName);
 				List<List<Double>> fnrList = 
 						classifierResultsSvc.getLastFnrResultsFor(classifierName, attribSelEvalName);
-				String title = AssignUtil.getStringAfterLastDot(classifierName) + " with " +
-						AssignUtil.getStringAfterLastDot(attribSelEvalName);
+				String title = AssignUtil.abbreviateClassifierName(
+						AssignUtil.getStringAfterLastDot(classifierName)) +
+						" with " +
+						AssignUtil.abbreviateAttributeEvalName(
+								AssignUtil.getStringAfterLastDot(attribSelEvalName));
 				PointsWithTitle fprPoints = new PointsWithTitle(fprList, "FPR");
 				PointsWithTitle fnrPoints = new PointsWithTitle(fnrList, "FNR");
 				List<PointsWithTitle> points = new ArrayList<PointsWithTitle>();
@@ -53,8 +56,12 @@ public class Assign4Reports {
 						classifierResultsSvc.getLastNAucResultsFor(classifierName, attribSelEvalName);
 				List<List<Double>> wAucList = 
 						classifierResultsSvc.getLastWAucResultsFor(classifierName, attribSelEvalName);
-				String title = "AUC " + AssignUtil.getStringAfterLastDot(classifierName) + " " +
-						AssignUtil.getStringAfterLastDot(attribSelEvalName);
+				String title = "AUC " + 
+						AssignUtil.abbreviateClassifierName(
+							AssignUtil.getStringAfterLastDot(classifierName)) +
+							" with " +
+						AssignUtil.abbreviateAttributeEvalName(
+								AssignUtil.getStringAfterLastDot(attribSelEvalName));
 				PointsWithTitle pAucPoints = new PointsWithTitle(pAucList, "pAUC");
 				PointsWithTitle nAucPoints  = new PointsWithTitle(nAucList, "nAUC");
 				PointsWithTitle wAucPoints = new PointsWithTitle(wAucList, "wAUC");
