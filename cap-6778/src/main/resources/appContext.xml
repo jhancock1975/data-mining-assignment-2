@@ -23,6 +23,6 @@
 	
 	<import resource="classpath:assign2AppContext.xml"/>
 	
-	
+	<import resource="classpath:termPaperAppContext.xml"/>
 	
 </beans>

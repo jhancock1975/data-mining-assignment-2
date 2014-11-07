@@ -1,6 +1,6 @@
 set @expTime=(select max(experimentStartTime) from ClassifierResults);
-select classifierClassName, filterClassName, featureSetSize, pAUC, fpr, fnr from
-	ClassifierResults cr where pAUC=(select max(pAUC) 
+select classifierClassName, filterClassName, featureSetSize, nAUC, fpr, fnr from
+	ClassifierResults cr where nAUC=(select max(nAUC) 
 		from ClassifierResults
 		where experimentStartTime=@expTime
 		and ClassifierClassName=cr.classifierClassName
@@ -8,4 +8,4 @@ select classifierClassName, filterClassName, featureSetSize, pAUC, fpr, fnr from
 		)
 	and experimentStartTime=@expTime
 	group by classifierClassName, filterClassName 
-	order by max(pAUC) desc; 
+	order by max(nAUC) desc; 

@@ -62,3 +62,21 @@ select classifierClassName, filterClassName, wauc, fpr, fnr
 	from ClassifierResults 
 	where wAuc=(select max(wAuc) from ClassifierResults where experimentStartTime=@expTime and featureSetSize=6) 
 	and experimentStartTime=@expTime and featureSetSize=6;
+	
+/* for finding optimium AUC values */
+select classifierClassName, filterClassName, featureSetSize, pAUC from
+	ClassifierResults cr where pAUC=(select max(pAUC) 
+		from ClassifierResults
+		where experimentStartTime=@expTime
+		and ClassifierClassName=cr.classifierClassName
+		and filterClassName=cr.filterClassName
+		)
+	and experimentStartTime=@expTime
+	group by classifierClassName, filterClassName 
+	order by max(pAUC) desc;
+	
+/* best 6 feature ranker */
+select classifierClassName, filterClassName, max(pAUC) from ClassifierResults where experimentStartTime=@expTime and featureSetSize=6 and classifierClassName='weka.classifiers.lazy.IBk';
+
+/* dump data for anova */
+select classifierClassName, filterClassName, featureSetSize, pAuc from ClassifierResults where experimentStartTime=@expTime;
