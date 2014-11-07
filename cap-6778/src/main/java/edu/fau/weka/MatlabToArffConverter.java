@@ -33,27 +33,34 @@ public class MatlabToArffConverter {
 
 	public static final String inputDir= "/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/";
 	static String[] inputFiles = new String[]{
-			inputDir + "CLL-SUB-111.mat",
-			inputDir + "GLA-BRA-180.mat",
-			inputDir + "GLI-85.mat",
-			inputDir + "TOX-171.mat"
+		inputDir + "CLL-SUB-111.mat",
+		inputDir + "GLA-BRA-180.mat",
+		inputDir + "GLI-85.mat",
+		inputDir + "TOX-171.mat"
 	};
+
 	
-	List<Double> peturbLevels = Lists.newArrayList(0.0, 0.1, 0.2, 0.3, 0.4, 0.9);
-	
+	static List<Double> peturbLevels = Lists.newArrayList(0.0, 0.1, 0.2, 0.3, 0.4, 0.9);
+	public static final int numFolds = 10;
+
 	public static void main(String[] args){
+		
 		MatlabToArffConverter converter =  new MatlabToArffConverter();
 		for (String inFileName: inputFiles){
-			try {
-				converter.convert(inFileName);
-			} catch (FileNotFoundException e) {
-				LOG.debug("could not open file " + e.getMessage());
-			} catch (IOException e) {
-				LOG.debug("io exception " + e.getMessage());
+			for (Double peturbLevel: peturbLevels){
+				for (int i = 0; i< numFolds; i++){
+					try {
+						converter.convertSamplePeturb(inFileName, peturbLevel, i, 0.25);
+					} catch (FileNotFoundException e) {
+						LOG.debug("could not open file " + e.getMessage());
+					} catch (IOException e) {
+						LOG.debug("io exception " + e.getMessage());
+					}
+				}
 			}
 		}
 	}
-	
+
 	public void convert(String inFileName) throws FileNotFoundException, IOException{
 		String outFileName = generateArffFileName(inFileName);
 		MatFileReader reader = new MatFileReader(inFileName);
@@ -69,23 +76,24 @@ public class MatlabToArffConverter {
 	private String generateArffFileName(String matFileName){
 		return matFileName.substring(0, matFileName.lastIndexOf('.')) + ".arff";
 	}
-	
-	private String generatePeturbedFileName(String matFileName, double peturbLevel){
-		return matFileName.substring(0, matFileName.lastIndexOf('.')) + "-"+peturbLevel+".arff";
+
+	private String generatePeturbedFileName(String matFileName, double peturbLevel, int foldNumber){
+		return matFileName.substring(0, matFileName.lastIndexOf('.')) + "-"+peturbLevel+"-"+foldNumber+".arff";
 	}
-	
-	public void convertSamplePeturb(String inFileName, double peturbation, int sampleSize)throws FileNotFoundException, IOException{
-		String outFileName = generatePeturbedFileName(inFileName, peturbation);
+
+	public void convertSamplePeturb(String inFileName, double peturbation, 
+			int foldNumber, double sampleSize)throws FileNotFoundException, IOException{
+		String outFileName = generatePeturbedFileName(inFileName, peturbation, foldNumber);
 		MatFileReader reader = new MatFileReader(inFileName);
 		PrintWriter outFile = new PrintWriter(new File(outFileName));
 		Map<String, MLArray> map  = reader.getContent();
 		printAttributes(map.get(ATTRIBUTE_LIST_KEY), outFile);
 		printClassAttributes(map.get(CLASS_ATTRIBUTE_LIST_KEY), outFile);
 		samplePeturbPrintData(((MLDouble) reader.getMLArray(DATA_KEY)).getArray(), 
-				(MLDouble) map.get(CLASS_ATTRIBUTE_LIST_KEY), outFile,  peturbation,  sampleSize);
+				((MLDouble) map.get(CLASS_ATTRIBUTE_LIST_KEY)).getArray(), outFile,  peturbation,  sampleSize);
 		outFile.close();
 	}
-	
+
 	public static final String ATTRIBUTE_MARKER = "@ATTRIBUTE";
 	public static final String REAL_ATTRIBUTE_TYPE_NAME = "REAL";
 	public static final String ARFF_FILE_HEADER="@RELATION figure1";
@@ -127,11 +135,18 @@ public class MatlabToArffConverter {
 		}
 		outFile.println(sb.toString() + "}");
 	}
-	
+
 	public Set<Double> mLDoubleListToSet(MLDouble cells){
 		Set<Double> classValues = new HashSet<Double>();
 		for (int i = 0; i < cells.getSize(); i++){
 			classValues.add(cells.get(i));
+		}
+		return classValues;
+	}
+	public Set<Double> doubleArrToSet(double[] doubles){
+		Set<Double> classValues = new HashSet<Double>();
+		for (double d: doubles){
+			classValues.add(d);
 		}
 		return classValues;
 	}
@@ -146,19 +161,31 @@ public class MatlabToArffConverter {
 			outFile.println(attributeList.get(i));
 		}	
 	}
-	
-	private void samplePeturbPrintData(double[][] data, MLDouble attributeList,
-			PrintWriter outFile, double peturbation, int sampleSize) {
+
+	private void samplePeturbPrintData(double[][] data, double[][] attributeList,
+			PrintWriter outFile, double peturbation, double sampleSize) {
 		if (sampleSize > data.length){
 			throw new RuntimeException("sample size is larger than size of data, cannot sample without replacement");
 		}
+
+		outFile.println(DATA_MARKER);
+		double[] attributes = new double[ attributeList.length];
+		for (int i = 0; i < attributeList.length; i++){
+			attributes[i] = attributeList[i][0];
+		}
 		
-		Set<Double> classValues = mLDoubleListToSet(attributeList);
-		Double[] classValuesArr = (Double[]) classValues.toArray();
+		Set<Double> classValues = doubleArrToSet(attributes);
+		Double[] classValuesArr = classValues.toArray(new Double[classValues.size()]);
 		
 		List<double[]> dataList = Arrays.asList(data);
-		for (int i=0; i < sampleSize; i++){
-			
+		int numIterations = (int) (sampleSize * dataList.size());
+		
+		if (sampleSize <= 0){
+			throw new RuntimeException("sample size zero");
+		}
+		
+		for (int i=0; i < numIterations; i++){
+
 			//figure out which samples we can still choose from
 			List<Integer> availableSamples = new ArrayList<Integer>();
 			for (int j = 0; j < dataList.size(); j++){
@@ -169,29 +196,29 @@ public class MatlabToArffConverter {
 
 			//randomly choose an unused sample
 			int curListIndex = availableSamples.get(AssignUtil.rand.nextInt( availableSamples.size()));
-			
+
 			double[] curList = dataList.get(curListIndex);
 			for (int j=0; j < curList.length; j++){
-				outFile.print(data[i][j]+",");
+				outFile.print(data[curListIndex][j]+",");
 			}
 			//sample without replacement
 			dataList.set(curListIndex, null); 
-			
+
 			//randomly inject noise with probability peturbation
 			if (AssignUtil.rand.nextDouble() < peturbation){
-				outFile.println(injectNoise(attributeList.get(curListIndex), classValuesArr));
+				outFile.println(injectNoise(attributes[curListIndex], classValuesArr));
 			} else {
-				outFile.println(attributeList.get(curListIndex));
+				outFile.println(attributes[curListIndex]);
 			}
 		}
 	}
 
-	
+
 	private double injectNoise(Double curClass, Double[] classValuesArr) {
-			double newValue = classValuesArr[AssignUtil.rand.nextInt(classValuesArr.length)];
-			while (newValue == curClass){
-				 newValue = classValuesArr[AssignUtil.rand.nextInt(classValuesArr.length)];
-			}
+		double newValue = classValuesArr[AssignUtil.rand.nextInt(classValuesArr.length)];
+		while (newValue == curClass){
+			newValue = classValuesArr[AssignUtil.rand.nextInt(classValuesArr.length)];
+		}
 		return newValue;
 	}
 
