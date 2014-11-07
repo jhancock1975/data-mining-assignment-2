@@ -21,59 +21,9 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd">
 
-	<util:list id="dirNameList" value-type="java.lang.String">
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/CLL-SUB-111.mat/0.0
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/CLL-SUB-111.mat/0.1
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/CLL-SUB-111.mat/0.2
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/CLL-SUB-111.mat/0.3
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/CLL-SUB-111.mat/0.4
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/CLL-SUB-111.mat/0.9
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/GLA-BRA-180.mat/0.0
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/GLA-BRA-180.mat/0.1
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/GLA-BRA-180.mat/0.2
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/GLA-BRA-180.mat/0.3
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/GLA-BRA-180.mat/0.4
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/GLA-BRA-180.mat/0.9
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/GLI-85.mat/0.0
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/GLI-85.mat/0.1
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/GLI-85.mat/0.2
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/GLI-85.mat/0.3
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/GLI-85.mat/0.4
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/GLI-85.mat/0.9
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/TOX-171.mat/0.0
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/TOX-171.mat/0.1
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/TOX-171.mat/0.2
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/TOX-171.mat/0.3
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/TOX-171.mat/0.4
-		</value>
-		<value>/home/john/Documents/school/fall-2014/data-mining/assignments/term-paper/output/TOX-171.mat/0.9
-		</value>
-	</util:list>
+	
 	<bean id="pairwiseSimCalcParams" class="edu.fau.weka.model.PairwiseSimCalcParams">
 		<property name="inputDirName" value="${pairwiseSimParams.inputDir}" />
-		<property name="outputDirNames" ref="dirNameList" />
 	</bean>
 
 	<bean id="pairwiseSimCalc" class="edu.fau.weka.PairwiseSymCalculator" />
