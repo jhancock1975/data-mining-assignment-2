@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import edu.fau.weka.types.ClassifierTypes;
 
@@ -97,4 +98,5 @@ public class AssignUtil {
 			return classifierName;
 		}
 	}
+	public static Random rand = new Random();
 }
