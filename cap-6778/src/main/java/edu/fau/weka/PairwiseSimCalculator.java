@@ -1,6 +1,8 @@
 package edu.fau.weka;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -23,16 +25,12 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
-import edu.fau.weka.dao.PairwiseSimResultsRepository;
-import edu.fau.weka.model.FeatureLists;
 import edu.fau.weka.model.PairwiseSimCalcParams;
 import edu.fau.weka.model.PairwiseSimResults;
 import edu.fau.weka.model.RawFeatureList;
 import edu.fau.weka.service.ArffFileService;
 import edu.fau.weka.service.AttributeSelectionEvaluationService;
-import edu.fau.weka.service.FeatureListService;
 import edu.fau.weka.service.PairwiseSimResultsService;
-import edu.fau.weka.service.PairwiseSimResultsServiceImpl;
 import edu.fau.weka.service.RawFeatureListService;
 @Component
 public class PairwiseSimCalculator {
@@ -48,6 +46,7 @@ public class PairwiseSimCalculator {
 	@Autowired
 	private RawFeatureListService rawFeatureSvc;
 	public void calculatePairwiseSim(){
+		Timestamp experimentStartTime = new Timestamp(System.currentTimeMillis());
 		for (String dirName: params.getOutputDirNames()){
 			arffSvc.setInputDirectory(dirName);
 			List<Map<Object, List<List<Double>>>> partitionedInstances = new ArrayList<Map<Object, List<List<Double>>>>();
@@ -60,7 +59,7 @@ public class PairwiseSimCalculator {
 					try {
 						Instances data = arffSvc.getNextData();
 						peturbLevel = parsePeturbLevel(data.relationName());
-						saveFeatureSelection(data, peturbLevel, uuid);
+						saveFeatureSelection(data, peturbLevel, uuid, experimentStartTime);
 						partitionedInstances.add(partitonData(data));
 						LOG.debug(data.relationName());
 						
@@ -77,6 +76,7 @@ public class PairwiseSimCalculator {
 				results.setAvgPairwiseSimilarity(avgSim);
 				results.setPeturbLevel(peturbLevel);
 				results.setExperimentUuid(uuid);
+				results.setExperimentStartTime(experimentStartTime);
 				pairwiseSimSvc.saveResults(results);
 				
 				LOG.debug("dataset dir: " + dirName + " avgSim: " + avgSim);
@@ -103,7 +103,7 @@ public class PairwiseSimCalculator {
 		}
 		return 0;
 	}
-	private void saveFeatureSelection( Instances data, double peturbLevel, String uuid) {
+	private void saveFeatureSelection( Instances data, double peturbLevel, String uuid, Timestamp experimentStartTime) {
 		
 		int numFeatures = (int) (data.numAttributes() * 0.01);
 		if (numFeatures < 1){
@@ -137,6 +137,7 @@ public class PairwiseSimCalculator {
 				result.setEvaluatorName(getTopLevel(asEval.getClass().toString()));
 				result.setNumFeatures(numFeatures);
 				result.setExperimentUuid(uuid);
+				result.setExperimentStartTime(experimentStartTime);
 				rawFeatureSvc.saveRawFeatureList(result);
 			} catch (Exception e) {
 				LOG.debug("unable to apply filter " + e.getMessage());

@@ -1,5 +1,7 @@
 package edu.fau.weka.model;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +21,7 @@ public class PairwiseSimResults {
 	private Integer numFolds;
 	private Double avgPairwiseSimilarity;
 	private String experimentUuid;
+	private Timestamp experimentStartTime;
 	
 	public Integer getPairwiseSimResultId() {
 		return pairwiseSimResultId;
@@ -61,5 +64,11 @@ public class PairwiseSimResults {
 	}
 	public void setExperimentUuid(String experimentUuid) {
 		this.experimentUuid = experimentUuid;
+	}
+	public Timestamp getExperimentStartTime() {
+		return experimentStartTime;
+	}
+	public void setExperimentStartTime(Timestamp experimentStartTime) {
+		this.experimentStartTime = experimentStartTime;
 	}
 }
