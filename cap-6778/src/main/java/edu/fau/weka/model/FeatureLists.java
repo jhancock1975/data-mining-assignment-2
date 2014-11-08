@@ -12,15 +12,16 @@ public class FeatureLists {
 	private Integer featureListId;
 	private Integer experimentResultId;
 	private String attribute;
-	public FeatureLists(Integer classifierResultId, String attribute) {
-		this.experimentResultId = classifierResultId;
+	public FeatureLists(Integer experimentResultId, String attribute) {
+		this.experimentResultId = experimentResultId;
 		this.attribute = attribute;
 	}
+	public FeatureLists(){}
 	public Integer getExperimentResultId() {
 		return experimentResultId;
 	}
-	public void setExperimentResultId(Integer classifierResultId) {
-		this.experimentResultId = classifierResultId;
+	public void setExperimentResultId(Integer experimentResultId) {
+		this.experimentResultId = experimentResultId;
 	}
 	public String getAttribute() {
 		return attribute;

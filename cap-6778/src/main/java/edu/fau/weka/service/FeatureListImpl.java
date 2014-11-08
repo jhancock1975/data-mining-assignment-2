@@ -1,5 +1,6 @@
 package edu.fau.weka.service;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,5 +26,8 @@ public class FeatureListImpl implements FeatureListService {
 			}
 		}
 	}
-
+	public List<FeatureLists> getFeatureSetForDataSetNoiseLevelSelectorFold(String dataSetName, 
+			double noiseLevel, String selectorName, int fold ) {
+		return featureRepo.getFeatureSetForDataSetNoiseLevelSelectorFold(dataSetName, noiseLevel, selectorName, fold);
+	}
 }
