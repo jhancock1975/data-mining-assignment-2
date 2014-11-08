@@ -7,10 +7,10 @@
     </layout>
   </appender>
    
-  <logger name="edu.fau.weka" level="TRACE"/>
-   
- 
-  <root level="debug">
+  
+  <root level="error">
     <appender-ref ref="STDOUT" />
   </root>
+  
+  
 </configuration>

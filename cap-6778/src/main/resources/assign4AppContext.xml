@@ -68,8 +68,8 @@
 	<util:list id="attributeSelectionEvaluators" value-type="weka.attributeSelection.ASEvaluation">
 		<bean id="infoGainEvaluator" class="weka.attributeSelection.InfoGainAttributeEval"/>
 		<bean id="chiSquaredASEvaluator" class="weka.attributeSelection.ChiSquaredAttributeEval"/>
-		<bean id="gainRatioEvaluator" class="weka.attributeSelection.GainRatioAttributeEval"/>
-		<bean id="symmetricUncertainty" class="weka.attributeSelection.SymmetricalUncertAttributeEval"/>
+		<!-- <bean id="gainRatioEvaluator" class="weka.attributeSelection.GainRatioAttributeEval"/>
+		<bean id="symmetricUncertainty" class="weka.attributeSelection.SymmetricalUncertAttributeEval"/>  -->
 		<bean id="reliefF" class="weka.attributeSelection.ReliefFAttributeEval">
 			<property name="weightByDistance" value="false"/>
 		</bean>
@@ -89,7 +89,8 @@
 	</bean>
 	<bean id="j48" class="weka.classifiers.trees.J48"/>
 	
-	<!-- numbers of features to retain -->
+	<!-- numbers of features to retain - see termPaper.properties and PairwiseSimCalcParams for
+		better way to do this-->
 	<util:list id="numFeaturesList" value-type="java.lang.Integer">
 		<value>5</value>
 		<value>6</value>

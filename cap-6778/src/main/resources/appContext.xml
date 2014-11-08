@@ -17,7 +17,8 @@
 
 	<context:component-scan base-package="edu.fau.weka" />
 	
-	<context:property-placeholder location="classpath:Assignment2.properties, classpath:Assignment4.properties" />
+	<context:property-placeholder location="classpath:Assignment2.properties, classpath:Assignment4.properties,
+		 classpath:termPaper.properties" />
 	
 	<import resource="classpath:assign4AppContext.xml"/>
 	

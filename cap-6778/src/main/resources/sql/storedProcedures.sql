@@ -37,6 +37,23 @@ BEGIN
 END //
 delimiter ;
 
+DROP PROCEDURE IF EXISTS getFeatureSetForDataSetNoiseLevelSelectorFold;
+delimiter //
+CREATE PROCEDURE getFeatureSetForDataSetNoiseLevelSelectorFold(IN dataSetName varchar(255), 
+	IN noiseLevel double, in selectorName varchar(255), in fold int)
+BEGIN
+	declare lastExpTime timestamp;
+	select max(experimentStartTime) from RawFeatureList into lastExpTime;
+	select f.* from FeatureLists f,
+		RawFeatureList r
+		where r.dataSetName like concat(dataSetName, '-', noiseLevel, '-', fold, '%')
+			and r.evaluatorName=selectorName
+			and r.experimentStartTime=lastExpTime
+			and f.attribute != 'CLASS'
+			and r.rawFeatureListId=f.experimentResultId;
+END //
+delimiter ;
+
 /* queries for answering part 2 about overlap with j48 */
 set @expTime=(select max(experimentStartTime) from ClassifierResults);
 select group_conct(fl.attribute) as 'j48 overlap', classifierClassName, filterClassName 
