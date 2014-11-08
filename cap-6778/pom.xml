@@ -38,8 +38,8 @@
 			<version>${logback.version}</version>
 		</dependency>
 
-		<!--  AOP dependencies -->
-		
+		<!-- AOP dependencies -->
+
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
@@ -52,10 +52,10 @@
 			<version>${aspectj.version}</version>
 		</dependency>
 
-		<!-- end aop dependencies --> 
-		
-		<!--  jpa dependencies -->
-		
+		<!-- end aop dependencies -->
+
+		<!-- jpa dependencies -->
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -81,15 +81,24 @@
 			<artifactId>spring-data-jpa</artifactId>
 			<version>1.7.0.RELEASE</version>
 		</dependency>
-		<!-- end  jpa dependencies -->
-		
+		<!-- end jpa dependencies -->
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>net.sourceforge.jmatio</groupId>
+			<artifactId>jmatio</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
