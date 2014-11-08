@@ -39,7 +39,7 @@ public class MatlabToArffConverter {
 		inputDir + "TOX-171.mat"
 	};
 
-	
+	static String outputDir = inputDir + "output/";
 	static List<Double> peturbLevels = Lists.newArrayList(0.0, 0.1, 0.2, 0.3, 0.4, 0.9);
 	public static final int numFolds = 10;
 
@@ -47,10 +47,13 @@ public class MatlabToArffConverter {
 		
 		MatlabToArffConverter converter =  new MatlabToArffConverter();
 		for (String inFileName: inputFiles){
+			File inFile = new File(inFileName);
 			for (Double peturbLevel: peturbLevels){
+				String peturbLevelDirName = outputDir + "/" +inFile.getName() + "/" + peturbLevel + "/";
+				
 				for (int i = 0; i< numFolds; i++){
 					try {
-						converter.convertSamplePeturb(inFileName, peturbLevel, i, 0.25);
+						converter.convertSamplePeturb(inFileName, peturbLevelDirName, peturbLevel, i, 0.25);
 					} catch (FileNotFoundException e) {
 						LOG.debug("could not open file " + e.getMessage());
 					} catch (IOException e) {
@@ -64,48 +67,63 @@ public class MatlabToArffConverter {
 	public void convert(String inFileName) throws FileNotFoundException, IOException{
 		String outFileName = generateArffFileName(inFileName);
 		MatFileReader reader = new MatFileReader(inFileName);
-		PrintWriter outFile = new PrintWriter(new File(outFileName));
+		File outFile = new File(outFileName);
+		PrintWriter outFilePw = new PrintWriter(outFile);
 		Map<String, MLArray> map  = reader.getContent();
-		printAttributes(map.get(ATTRIBUTE_LIST_KEY), outFile);
-		printClassAttributes(map.get(CLASS_ATTRIBUTE_LIST_KEY), outFile);
+		printAttributes(map.get(ATTRIBUTE_LIST_KEY), outFilePw, outFile.getName());
+		printClassAttributes(map.get(CLASS_ATTRIBUTE_LIST_KEY), outFilePw);
 		printData(((MLDouble) reader.getMLArray(DATA_KEY)).getArray(), 
-				(MLDouble) map.get(CLASS_ATTRIBUTE_LIST_KEY), outFile);
-		outFile.close();
+				(MLDouble) map.get(CLASS_ATTRIBUTE_LIST_KEY), outFilePw);
+		outFilePw.close();
 	}
 
 	private String generateArffFileName(String matFileName){
 		return matFileName.substring(0, matFileName.lastIndexOf('.')) + ".arff";
 	}
 
-	private String generatePeturbedFileName(String matFileName, double peturbLevel, int foldNumber){
-		return matFileName.substring(0, matFileName.lastIndexOf('.')) + "-"+peturbLevel+"-"+foldNumber+".arff";
+	private String generatePeturbedFileName(File matFile, double peturbLevel, int foldNumber){
+		return matFile.getName().substring(0, matFile.getName().lastIndexOf('.')) + "-"+peturbLevel+"-"+foldNumber+".arff";
 	}
 
-	public void convertSamplePeturb(String inFileName, double peturbation, 
+	public void convertSamplePeturb(String inFileName, String  peturbLevelDirName, double peturbation, 
 			int foldNumber, double sampleSize)throws FileNotFoundException, IOException{
-		String outFileName = generatePeturbedFileName(inFileName, peturbation, foldNumber);
+		
+		String outFileName = generatePeturbedFileName(new File(inFileName), peturbation, foldNumber);
+		
+		File outDir = new File(peturbLevelDirName);
+		if (! outDir.exists()){
+			outDir.mkdirs();
+		}
+		File outFile = new File(peturbLevelDirName+"/"+outFileName);
+		
 		MatFileReader reader = new MatFileReader(inFileName);
-		PrintWriter outFile = new PrintWriter(new File(outFileName));
+		
+		PrintWriter outFilePw = new PrintWriter(outFile);
+		
 		Map<String, MLArray> map  = reader.getContent();
-		printAttributes(map.get(ATTRIBUTE_LIST_KEY), outFile);
-		printClassAttributes(map.get(CLASS_ATTRIBUTE_LIST_KEY), outFile);
+		
+		printAttributes(map.get(ATTRIBUTE_LIST_KEY), outFilePw, outFile.getName());
+		
+		printClassAttributes(map.get(CLASS_ATTRIBUTE_LIST_KEY), outFilePw);
+		
 		samplePeturbPrintData(((MLDouble) reader.getMLArray(DATA_KEY)).getArray(), 
-				((MLDouble) map.get(CLASS_ATTRIBUTE_LIST_KEY)).getArray(), outFile,  peturbation,  sampleSize);
-		outFile.close();
+				((MLDouble) map.get(CLASS_ATTRIBUTE_LIST_KEY)).getArray(), outFilePw,  peturbation,  sampleSize);
+		
+		outFilePw.close();
 	}
 
 	public static final String ATTRIBUTE_MARKER = "@ATTRIBUTE";
 	public static final String REAL_ATTRIBUTE_TYPE_NAME = "REAL";
-	public static final String ARFF_FILE_HEADER="@RELATION figure1";
+	public static final String ARFF_FILE_HEADER="@RELATION";
 	/**
 	 * prints attribute names to arff file
 	 * such as, "@ATTRIBUTE GENE1835X REAL" 
 	 * @param mlArray
 	 * @param outFile
 	 */
-	private void printAttributes(MLArray mlArray, PrintWriter outFile) {
+	private void printAttributes(MLArray mlArray, PrintWriter outFile, String relationName) {
 		MLCell cells = (MLCell) mlArray;
-		outFile.println(ARFF_FILE_HEADER);
+		outFile.println(ARFF_FILE_HEADER + " " + relationName);
 		for (int i = 0; i < cells.getSize(); i++){
 			outFile.print(ATTRIBUTE_MARKER + " ");
 			MLChar mlChar = ((MLChar) cells.get(i));
@@ -204,7 +222,7 @@ public class MatlabToArffConverter {
 			//sample without replacement
 			dataList.set(curListIndex, null); 
 
-			//randomly inject noise with probability peturbation
+			//randomly inject noise with probability perturbation
 			if (AssignUtil.rand.nextDouble() < peturbation){
 				outFile.println(injectNoise(attributes[curListIndex], classValuesArr));
 			} else {

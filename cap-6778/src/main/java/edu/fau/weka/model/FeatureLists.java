@@ -10,17 +10,17 @@ public class FeatureLists {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer featureListId;
-	private Integer classifierResultId;
+	private Integer experimentResultId;
 	private String attribute;
 	public FeatureLists(Integer classifierResultId, String attribute) {
-		this.classifierResultId = classifierResultId;
+		this.experimentResultId = classifierResultId;
 		this.attribute = attribute;
 	}
-	public Integer getClassifierResultId() {
-		return classifierResultId;
+	public Integer getExperimentResultId() {
+		return experimentResultId;
 	}
-	public void setClassifierResultId(Integer classifierResultId) {
-		this.classifierResultId = classifierResultId;
+	public void setExperimentResultId(Integer classifierResultId) {
+		this.experimentResultId = classifierResultId;
 	}
 	public String getAttribute() {
 		return attribute;

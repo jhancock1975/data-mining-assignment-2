@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * this class has methods for clacluating 
  * similarity between two sets as defined in 
@@ -21,16 +24,30 @@ import java.util.Set;
  */
 public class PairwiseSim {
 
+	static final Logger LOG = LoggerFactory.getLogger(PairwiseSim.class);
+	
 	public static double avgDist(List<List<Double>> fold1, List<List<Double>> fold2){
 		double sum = 0;
 		for (List<Double> l1: fold1){
 			for (List<Double> l2: fold2){
-				sum = sum + length(vectorDiff(l1, l2));
+				sum = sum + length(normalize(vectorDiff(l1, l2)));
 			}
 		}
 		return sum/(fold1.size() * fold2.size());
 	}
 
+	public static List<Double> normalize(List<Double> l1){
+		List<Double> result = new ArrayList<Double>();
+		double length = length(l1);
+		if (length == 0){
+			result = l1;
+		} else {
+			for (double d: l1){
+				result.add(d/length);
+			}
+		}
+		return result;
+	}
 	public static List<Double> vectorDiff(List<Double> l1, List<Double> l2){
 		if (l1.size() != l2.size()){
 			throw new RuntimeException("trying to subtract two vectors not the same length.");
@@ -49,8 +66,11 @@ public class PairwiseSim {
 		}
 		return Math.sqrt(sum);
 	}
-	public static double  avgPairwiseSim(List<Map<Object, List<List<Double>>>> featureSets){
-		Object [] featureSetArr =  featureSets.toArray();
+	public static double  avgPairwiseSim(List<Map<Object, List<List<Double>>>> partitionedInstances){
+		if (partitionedInstances.size() < 2){
+			throw new RuntimeException("cannot compute pairwise similarity with less than 2 folds");
+		}
+		Object [] featureSetArr =  partitionedInstances.toArray();
 		int numFolds = featureSetArr.length;
 		double sum = 0;
 		for (int i=0; i < numFolds - 1; i++){
@@ -64,7 +84,9 @@ public class PairwiseSim {
 				for (Object o: intersect){
 					List<List<Double>> fold1 = fold1Map.get(o);
 					List<List<Double>> fold2 = fold2Map.get(o);
-					innerSum += avgDist(fold1, fold2)/sizeOfIntersection(fold1, fold2);
+					double avgDist = avgDist(fold1, fold2);
+					LOG.debug("avgDist  = " + avgDist);
+					innerSum += avgDist(fold1, fold2)/intersect.size();
 				}
 				sum += innerSum;
 			}

@@ -12,11 +12,14 @@ import org.springframework.stereotype.Component;
 public class PairwiseSimResults {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Integer pairwiseSimResultId;
-	String dataSetName;
-	Double peturbLevel;
-	Double sampleSize;
-	Integer numFolds;
+	private Integer pairwiseSimResultId;
+	private String dataSetName;
+	private Double peturbLevel;
+	private Integer sampleSize;
+	private Integer numFolds;
+	private Double avgPairwiseSimilarity;
+	private String experimentUuid;
+	
 	public Integer getPairwiseSimResultId() {
 		return pairwiseSimResultId;
 	}
@@ -35,10 +38,10 @@ public class PairwiseSimResults {
 	public void setPeturbLevel(Double peturbLevel) {
 		this.peturbLevel = peturbLevel;
 	}
-	public Double getSampleSize() {
+	public Integer getSampleSize() {
 		return sampleSize;
 	}
-	public void setSampleSize(Double sampleSize) {
+	public void setSampleSize(Integer sampleSize) {
 		this.sampleSize = sampleSize;
 	}
 	public Integer getNumFolds() {
@@ -47,5 +50,16 @@ public class PairwiseSimResults {
 	public void setNumFolds(Integer numFolds) {
 		this.numFolds = numFolds;
 	}
-	
+	public Double getAvgPairwiseSimilarity() {
+		return avgPairwiseSimilarity;
+	}
+	public void setAvgPairwiseSimilarity(Double avgPairwiseSimilarity) {
+		this.avgPairwiseSimilarity = avgPairwiseSimilarity;
+	}
+	public String getExperimentUuid() {
+		return experimentUuid;
+	}
+	public void setExperimentUuid(String experimentUuid) {
+		this.experimentUuid = experimentUuid;
+	}
 }

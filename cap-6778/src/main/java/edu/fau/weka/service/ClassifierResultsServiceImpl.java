@@ -28,14 +28,8 @@ public class ClassifierResultsServiceImpl implements ClassifierResultsService {
 		String rawFeatureList = results.getFeatureSet();
 		int beginFeatures = rawFeatureList.indexOf("Num Attributes");
 		rawFeatureList = rawFeatureList.substring(beginFeatures, rawFeatureList.length());
-		String[] split = rawFeatureList.split("\n");
-		Pattern pattern = Pattern.compile("\\d+\\s+([a-zA-Z0-9]+)");
-		for (String line: split){
-			Matcher m = pattern.matcher(line);
-			if (m.find()){
-				featureSvc.saveFeature(new FeatureLists(results.getClassifierResultId(), m.group(1)));
-			}
-		}
+		featureSvc.saveFeatures(results.getClassifierResultId(), rawFeatureList);
+		
 	}
 	/**
 	 * without functional abstraction this is the best we can do
