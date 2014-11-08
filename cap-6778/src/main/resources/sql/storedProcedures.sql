@@ -40,11 +40,11 @@ delimiter ;
 DROP PROCEDURE IF EXISTS getFeatureSetForDataSetNoiseLevelSelectorFold;
 delimiter //
 CREATE PROCEDURE getFeatureSetForDataSetNoiseLevelSelectorFold(IN dataSetName varchar(255), 
-	IN noiseLevel double, in selectorName varchar(255), in fold int)
+	IN noiseLevel varchar(255), in selectorName varchar(255), in fold int)
 BEGIN
 	declare lastExpTime timestamp;
 	select max(experimentStartTime) from RawFeatureList into lastExpTime;
-	select f.* from FeatureLists f,
+	select f.*  from FeatureLists f, 
 		RawFeatureList r
 		where r.dataSetName like concat(dataSetName, '-', noiseLevel, '-', fold, '%')
 			and r.evaluatorName=selectorName
