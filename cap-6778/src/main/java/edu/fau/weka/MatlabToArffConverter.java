@@ -48,6 +48,13 @@ public class MatlabToArffConverter {
 		MatlabToArffConverter converter =  new MatlabToArffConverter();
 		for (String inFileName: inputFiles){
 			File inFile = new File(inFileName);
+			try {
+				converter.convert(inFileName);
+			} catch (FileNotFoundException e1) {
+				LOG.debug("file not found exception during convert " + e1.getMessage());
+			} catch (IOException e1) {
+				LOG.debug("io exception during convert " + e1.getMessage());
+			}
 			for (Double peturbLevel: peturbLevels){
 				String peturbLevelDirName = outputDir + "/" +inFile.getName() + "/" + peturbLevel + "/";
 				

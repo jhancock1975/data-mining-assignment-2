@@ -115,6 +115,16 @@ public class PairwiseSim {
 		}
 		return result;
 	}
+	public static <T> Set<T> union(Set<T> s1, Set<T> s2){
+		 Set<T> result = new HashSet<T>();
+		 for (T t: s1){
+			 result.add(t);
+		 }
+		 for (T t: s2){
+			 result.add(t);
+		 }
+		 return result;
+	}
 	public static double jaccard(Set<String> s1, Set<String> s2){
 		//doing intersect and union this way
 		//so we leave s1, s2 unchanged

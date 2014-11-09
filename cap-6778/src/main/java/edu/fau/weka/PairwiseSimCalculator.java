@@ -71,7 +71,8 @@ public class PairwiseSimCalculator {
 				double avgSim = PairwiseSim.avgPairwiseSim(partitionedInstances);
 				PairwiseSimResults results = new PairwiseSimResults();
 				results.setDataSetName(dirName);
-				results.setSampleSize(partitionedInstances.get(0).values().size());
+				//below is not sample size it is # of classes in data
+				//results.setSampleSize(partitionedInstances.get(0).values().size());
 				results.setNumFolds(partitionedInstances.size());
 				results.setAvgPairwiseSimilarity(avgSim);
 				results.setPeturbLevel(peturbLevel);
