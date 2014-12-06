@@ -54,6 +54,19 @@ BEGIN
 END //
 delimiter ;
 
+DROP PROCEDURE IF EXISTS getPairwiseSim;
+delimiter //
+CREATE PROCEDURE getPairwiseSim(IN dataSetName varchar(255), IN noiseLevel varchar(255))
+BEGIN
+	declare lastExpTime timestamp;
+	select max(experimentStartTime) from PairwiseSimResults into lastExpTime;
+	select * from PairwiseSimResults p 
+	where p.dataSetName like 
+		concat('%', dataSetName, '.mat/', noiseLevel, '%')
+		and experimentStartTime=lastExpTime;
+END //
+delimiter ;
+
 /* queries for answering part 2 about overlap with j48 */
 set @expTime=(select max(experimentStartTime) from ClassifierResults);
 select group_conct(fl.attribute) as 'j48 overlap', classifierClassName, filterClassName 

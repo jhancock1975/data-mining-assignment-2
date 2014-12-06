@@ -1,0 +1,314 @@
+1. Introduction–introduces the purpose, participants, and service.
+
+1.1.Purpose
+
+The purpose of this document is to define the service level agreement 
+for TravelCorp's use of Saas.com's SaasTravel software.
+
+1.2. Participants
+
+The participants in this agreement are TravelCorp, Saas.com, and 
+Picayune Metrics (Auditors) - Supporting Party
+TravelCorp (Travel Agency, renting software) - Signatory Party
+Saas.com (provider of Software as a Service services) - Signatory Party
+
+
+1.3. General Service Description
+Saas.com provides SaasTravel travel agency software as a service.
+
+2.
+Service Environment–describes the environment in which the organization will perform the service,
+from physical location, to hardware/software being used, to the policy and procedures the service
+provider will need to follow.
+
+The environment where Saas.com will perform the service is at the 
+facility Saas.com owns at 123 Main Street, Walla Walla, Washington 44311.
+For the remainder of this document the environment will be referred to
+as, "the data center," or ,"the Saas.com data center."
+
+
+2.1.
+Equipment
+The equipment discussed in this document refers to software that
+Saas.com will rent to TravelCorp.
+TravelCorp will rent Saas.com's SaasTravel generic travel agency
+software, which will be cusomizable to the extent that the software
+will be recognized as a TravelCorp product.
+
+2.2.
+Facilities
+Saas.com will provide no physical facilities to TravelCorp per se.  Saas.com
+will dedicate adequate resources in its data center to host an instance
+of its TravelSass software for TravelCorp. 
+
+Saas.com will provide a software facility to allow users that 
+administrator(s) at TravelCorp designate as authorized to access
+TravelCorp's instance of SaasTravel.
+
+Saas.com will provide a software facility to allow Picayune Metrics
+to observe the availabilty and performance of SaasTravel.
+
+Saas.com will provide TravelCorp with the IP address of the server
+hosting an instance of SaasTravel software such that TravelCorp
+may update the 'a' record of the DNS zone file of TravelCorp's choosing
+such that the host name in the zone file will resolve to the IP address
+that Saas.com provides.
+
+2.3.
+Entities and Locations
+
+The entities entering into this service level agreement are:
+
+Saas.com: service provider
+123 Main Street, Walla Walla, Washington 4431
+
+TravelCorp: service consumer
+555 Madison Avenue, New York, New York, 09511
+
+Picayune Metrics: service audotor
+1 Constablerwache Strasse, Franfurt Am Main, 01410-55
+
+2.4.
+Policies, Procedures and Standards
+2.4.1 Policies
+
+2.4.1.1 Confidentiality
+Saas.com allows  nothing but secure hypertext transfer protocol
+(https) connections to the instance of SaasTravel Saas.com provides
+for TravelCorp. See standards for https details.
+
+
+2.4.1.2 Integrity
+Saas.com guarantees that any data SaasTravel users enter in SassTravel
+will not be altered by a third party.
+Saas.com will allow Picayune Metrics access to a test account to
+verify that any data a user enters in the system is not alered.
+Should Picayune Metrics be able to prove this is not the case,
+Saas.com will provide TravelCorp with 90 days of free usage of 
+SaasTravel software.
+
+2.4.2 Procedures
+
+2.4.2.1 Authentication
+Saas.com will provide a procedure for authenticating the identities of
+SaasTravel software users.  
+
+2.4.3 Standards
+
+Saas.com guarantees that SaasTravel user passwords are stored as 
+SHA-512 hashes.
+
+Saas.com guarantees that it will allow users to connecto to
+TravelCorp's instance of SaasTravel software using SSL 3.0 as
+defined in https://tools.ietf.org/html/rfc6101.
+
+
+2.5.
+Agreements and Licenses
+
+Sass.com provides a license of SaasTravel to TravelCorp for up to 
+5,000 unique users. Picayune Metrics will arbitrate disputes over
+between TravelCorp and Saas.com as to the exact number of unique
+users.
+
+Saas.com is the sole owner of the copyright to SaasTravel.
+
+TravelCorp or Picayune Metrics may not use any reverse engineering 
+techniques to discover the implementation details of SaasTravel.
+
+Saas.com will provide Picayune Metrics SaasTravel system log data
+sufficient for Picayune Metrics to determine whether or not SaasTravel
+is performant according to the performance standards set forth in this
+service level agreement. 
+
+Picayune Metrics will not disclose any of its findings on the 
+performance of the  SaasTravel service Saas.com provides to TravelCorp
+without the written consent of Saas.com and TravelCorp.  Such a 
+disclosure disolves this agreement and any obligations Saas.com has
+to TravelCorp as well as any obligations TravelCorp has to Saas.com.
+
+
+
+3.
+Roles and Responsibilities–describes the roles and responsibilities of all major participants. The
+service provider responsibilities need to articulate not just the service tasks, but also the
+documentation of their services, reporting their actions, and support functions (e.g., if the new service
+will likely initiate trouble calls, the service agreement should articulate who and how these calls will
+be handled).
+3.1. Service Provider Responsibilities
+
+3.1.1. Service Tasks
+
+Saas.com will make the SaasTravel application available to authorized users
+as designated by TravelCorp on a coninuing basis 
+
+Saas.com will provide a mechanism for TravelCorp to designate users 
+as authorized, and a mechanism to authenticate users per the authentication
+procedure described above.
+
+Saas.com is responsible for banning TravelCorp users of its SaasTravel
+software that Saas.com deems as acting with malicious intent to disrupt
+the SaasTravel software service.
+
+
+
+
+3.1.2. Documentation
+
+Saas.com will provide documentation for its SaasTravel software that
+describes all features and functions available to users.
+
+The documentation will be available as part of SaasTravel software.
+
+Saas.com will provide a facility for TravelCorp to customize SassTravel
+documentation.
+
+3.1.3. Service Support
+
+The software Saas.com provides to TravelCorp will be customizable to
+the extent that it appears to be a TravelCorp product.  Personnel at
+Saas.com will be available via telephone at 1-888-555-1212 
+24 hours a day to assist TravelCorp. with technical support issues regarding customization
+of Saas.com's SassTravel software.
+
+Users that TravelCorp designates as authorized will be able to receive
+technial support using the SaasTravel software Saas.com provides for TravelCorp
+via telephone at 1-888-555-1212.
+
+Saas.com is responsible for maintaining the hardware and software systems
+that provid the environment that SaasTravel runs within.
+
+3.1.4. Reporting Requirements
+
+
+Picayune Metrics will issue a monthly report to Saas.com and TravelCorp
+containing test results.
+
+TravelCorp and Saas.com are responsible for protecting the confidentiality
+of the monthly report of test results within their respective organizations.
+
+3.2.
+Client Organization Responsibilities
+
+TravelCorp is responsible for auditing the legality and propriety 
+of the activity the users of SassTravel that it designates as authorized.
+
+TravelCorp is responsible for alerting Saas.com of sub-standard
+performance of SaasTravel software.  Sub-standard performance
+is performance measured to be less than at the levels defined in
+section 4 below.  Saas.com will not be liable for penalties related to providing 
+service below levels described in section 4 below if TravelCorp does not notify
+Saas.com within 5 days of the event.
+
+
+
+4.
+Service Level–identifies the metric, the service level,
+and methodology for assessing the service level.
+For further guidance on developing metrics, NIST Special Publication 800-55,
+Security Metrics
+Guide for Information Technology Systems
+, provides guidance on developing and gathering metrics,
+as well as sample IT security metrics. Organizations
+may choose to articulate the service level in a
+range: from unacceptable to minimum to interim to target,
+or they may choose to set varying service levels for various user groups
+or schedule times. If so, each service level will need to be articulated.
+
+4.1. Objectives
+
+The objective of this section is to provide concrete metrics for assessing
+the performance of the SaasTravel software Saas.com provides for 
+TravelCorp, to define responsibilities of the supporting party
+for assessing these metrics, to define acceptable levels of these 
+metrics.
+
+4.2.
+Metric(s)
+
+Uptime - the percent of time during the current month that the SaasTravel
+software is available to TravelCorp users.  A month is defined as
+00:00 on the first day of the month according to the time available
+on http://www.time.gov/, and 23:23:59 on the last day of the month
+according to http://www.time.gov/.
+
+
+Throughput - the number of distinct user operations per second 
+a user can complete using SaasTravel software as described in documentation for SaasTravel
+software.  Saas.com and Travel corp will approve distinct user operations
+in the testing plan described in section 3.1.4, "Reporting Requirements."
+
+
+
+4.3.
+Service Level
+
+Saas.com is responsible for SaasTravel software's availablitly. 
+SassTravel must be available to TravelCorp's authorized users no less
+than 99.5% of the time in one month. SaasTravel must be capable of
+handling 3 user input transactions per second in order to be considered
+available.
+
+4.4. Service Level Assessment
+
+Picayune Metrics will be authorized to to conduct test procedures on
+TravelCorp's instance of SaasTravel that Saas.com provides to
+TravelCorp.
+
+Picayune Metrics will submit a testing plan to Saas.com and TravelCorp
+for their approval prior to conducting tests.
+
+The results of Picayune Metrics testing verify that Saas.com is providing
+an instance of SaasTravel performant to the degree stated in section
+4.3, "Service Level," above.
+
+5.
+Terms and Adjustments–provides the costs and period
+of performance of the service levels and roles
+and responsibilities articulated in the previous sec
+tions as well as providing processes for resolving
+service agreement disputes, remedying non-complia
+nce, and amending the agreement to account for
+changing requirements.
+
+5.1. Costs
+
+TravelCorp will pay Saas.com a monthly fee of $10,000 to grant
+its users access to TravelSaas software.
+
+TravleCorp will enter in to a separate agreemnt with Picayune Metrics
+to pay Picayune Metrics any fees associated with services Picayune Metrics
+provides as a part of this service level agreement.
+
+5.2. Period of Performance
+
+The period of performance is a month as described in section 4.2 above.
+All parties participating in this service level agreement agree that
+section 4.2 precisely defines a period of time of one month and agrees
+that the correct time is provided by http://www.time.gov/
+
+5.3. Dispute Resolution
+
+In the event that Saas.com and TravelCorp dispute data
+that could prove a breech of this service level agreement Saas.com
+and TravelCorp agree that the only documentation submitted to any
+party with legal or moral authority to selttle the dispute will be
+the contents of the reports Picayune Metrics creates on behalf of 
+Saas.com and TravelCorp as specified in section 3.1.4,
+"Reporting Requirements," of this document.
+
+5.4. Remedies for Non-Compliance
+
+In the even that TravelCorp is not in compliance with this service level
+agreement, Saas.com is free to terminate provision of SaasTravel software
+to TravelCorp users.
+
+In the even that Saas.com is not in compliance with this service level
+agreement, TravelCorp will receive one day of service, free of charge
+for every percentage point of the percent of time in one month
+that Saas.com does not provide service at the levels of uptime and throughput 
+defined in section 4.3, "Service Level," of this document.
+
+5.5.Maintenance of Agreements
+
+TravelCorp, Saas.com, and Pickayune Metrics will meet 
